@@ -1,0 +1,22 @@
+# dependencies
+# Ignore workspace node_modules because of vite cache.
+# https://stackoverflow.com/a/74665163/20140921
+node_modules
+
+# production
+/package/dist
+/preview/dist
+
+# editor
+/.vscode
+
+# misc
+.DS_Store
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*

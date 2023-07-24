@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "lib": ["ES6", "DOM"],
+    "module": "ES6",
+    "target": "ES6",
+    "moduleResolution": "Node",
+    "strictNullChecks": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "jsx": "react-jsx",
+    "noImplicitAny": true,
+    "paths": {
+      "@/*": ["./src/*"],
+    },
+    "declaration": true,
+  },
+  "include": ["src/**/*"],
+}
