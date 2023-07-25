@@ -14,7 +14,7 @@ const App = () => {
 
   return <>
     <header className='Preview-Header'>
-      <h1>@dlguswo333/react-window-infinite-scroll preview</h1>
+      <h1>react-window-infinite-scroll preview</h1>
     </header>
     <main className='Preview-Main'>
       <InfiniteScroll
