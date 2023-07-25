@@ -17,48 +17,7 @@ $big-screen: 800px;
         flex-direction: row;
         align-items: flex-start;
     }
-    .Preview {
-        position: relative;
-        padding: 10pt;
-        .Switch-Holder {
-            min-width: 220px;
-            min-height: 220px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-        @media (max-width: $big-screen) {
-            &:not(:last-child) {
-                margin-bottom: 40pt;
-                &:after {
-                    content: "";
-                    position: absolute;
-                    left: 0;
-                    right: 0;
-                    bottom: -20pt;
-                    height: 1px;
-                    background-color: black;
-                }
-            }
-        }
-        @media (min-width: $big-screen) {
-            border: 1px solid black;
-            margin: 8pt 12pt;
-        }
-        .Panel {
-            margin-top: 10pt;
-            @media (min-width: $big-screen) {
-                padding: 6pt;
-            }
-            &:not(:last-child) {
-                margin-bottom: 6pt;
-            }
-            & > div > label {
-                white-space: nowrap;
-                word-break: keep-all;
-                font-family: monospace;
-                font-size: 11pt;
-            }
-        }
+    .Outer {
+        border: 1px solid gray;
     }
 }
