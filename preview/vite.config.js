@@ -3,7 +3,7 @@ import viteReact from '@vitejs/plugin-react';
 import tsconfigPaths from 'vite-tsconfig-paths'
 
 export default defineConfig({
-  base: '/react-window-infinite-loader',
+  base: '/react-window-infinite-scroll',
   build: {
     target: 'es6',
     outDir: 'dist',
