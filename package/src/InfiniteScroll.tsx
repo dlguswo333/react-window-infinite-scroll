@@ -6,6 +6,7 @@ type Direction = 'start' | 'end';
 type Props = {
   isItemLoaded: (index: number) => boolean;
   loadMoreItems: (direction: Direction) => Promise<unknown>;
+  onItemsRendered: OnItemsRendered;
   itemCount: number;
   threshold: number;
   /** offset value for smooth infinite scrolling. */
@@ -18,6 +19,7 @@ type Props = {
 const InfiniteScroll = ({
   isItemLoaded,
   loadMoreItems,
+  onItemsRendered,
   itemCount,
   threshold,
   scrollOffset,
@@ -36,7 +38,9 @@ const InfiniteScroll = ({
     pending.current = false;
   }, [loadMoreItems]);
 
-  const onItemsRendered = useCallback<OnItemsRendered>(({visibleStartIndex, visibleStopIndex}) => {
+  const _onItemsRendered = useCallback<OnItemsRendered>((args) => {
+    const {visibleStartIndex, visibleStopIndex} = args;
+    onItemsRendered(args);
     if (data.length === itemCount) {
       // All items are loaded and visible.
       return;
@@ -54,7 +58,7 @@ const InfiniteScroll = ({
       }
       _loadMoreItems('start');
     }
-  }, [data.length, threshold, itemCount, isItemLoaded, _loadMoreItems]);
+  }, [data.length, threshold, itemCount, isItemLoaded, _loadMoreItems, onItemsRendered]);
 
   // Call loadMoreItems when data changes to fetch data enough to fill the screen
   // without user having to scroll to induce onItemsRendered callback.
@@ -78,7 +82,7 @@ const InfiniteScroll = ({
     }
   }, [data, isItemLoaded, itemCount, scrollOffset, _loadMoreItems, outerRef]);
 
-  return <>{children({onItemsRendered})}</>;
+  return <>{children({onItemsRendered: _onItemsRendered})}</>;
 };
 
 export default InfiniteScroll;
