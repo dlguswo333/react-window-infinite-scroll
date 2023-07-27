@@ -1,7 +1,7 @@
 import {ReactNode, useCallback, useEffect, useRef} from 'react';
 import {ListOnItemsRenderedProps} from 'react-window';
 
-type onItemsRendered = (props: ListOnItemsRenderedProps) => unknown;
+type OnItemsRendered = (props: ListOnItemsRenderedProps) => unknown;
 type Direction = 'start' | 'end';
 type Props = {
   isItemLoaded: (index: number) => boolean;
@@ -10,7 +10,7 @@ type Props = {
   threshold: number;
   /** offset value for smooth infinite scrolling. */
   scrollOffset: number;
-  children: ({onItemsRendered}: {onItemsRendered: onItemsRendered}) => ReactNode;
+  children: ({onItemsRendered}: {onItemsRendered: OnItemsRendered}) => ReactNode;
   outerRef: React.RefObject<HTMLElement>;
   data: unknown[];
 }
@@ -36,7 +36,7 @@ const InfiniteScroll = ({
     pending.current = false;
   }, [loadMoreItems]);
 
-  const onItemsRendered = useCallback<onItemsRendered>(({visibleStartIndex, visibleStopIndex}) => {
+  const onItemsRendered = useCallback<OnItemsRendered>(({visibleStartIndex, visibleStopIndex}) => {
     if (data.length === itemCount) {
       // All items are loaded and visible.
       return;
