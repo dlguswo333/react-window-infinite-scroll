@@ -9,12 +9,16 @@ type Props = {
   onItemsRendered?: OnItemsRendered;
   itemCount: number;
   threshold: number;
-  /** offset value for smooth infinite scrolling. */
-  scrollOffset: number;
+  /** offset value (px) for smooth infinite scrolling. Default value is `5`. */
+  scrollOffset?: number;
   children: ({onItemsRendered}: {onItemsRendered: OnItemsRendered}) => ReactNode;
   outerRef: React.RefObject<HTMLElement>;
   data: unknown[];
 }
+
+const DEFAULT_PROP_VALUES = {
+  SCROLL_OFFSET: 5,
+};
 
 const InfiniteScroll = ({
   isItemLoaded,
@@ -22,7 +26,7 @@ const InfiniteScroll = ({
   onItemsRendered,
   itemCount,
   threshold,
-  scrollOffset,
+  scrollOffset = DEFAULT_PROP_VALUES.SCROLL_OFFSET,
   children,
   outerRef,
   data,
