@@ -8,19 +8,19 @@ type Props = {
   loadMoreItems: (direction: Direction) => Promise<unknown>;
   itemCount: number;
   threshold: number;
+  /** offset value for smooth infinite scrolling. */
+  scrollOffset: number;
   children: ({onItemsRendered}: {onItemsRendered: onItemsRendered}) => ReactNode;
   outerRef: React.RefObject<HTMLElement>;
   data: unknown[];
 }
-
-/** offset value for smooth functioning. */
-const SCROLL_OFFSET = 50;
 
 const InfiniteScroll = ({
   isItemLoaded,
   loadMoreItems,
   itemCount,
   threshold,
+  scrollOffset,
   children,
   outerRef,
   data,
@@ -63,20 +63,20 @@ const InfiniteScroll = ({
       return;
     }
     const element = outerRef.current;
-    if (element.scrollTop + element.offsetHeight + SCROLL_OFFSET >= element.scrollHeight) {
+    if (element.scrollTop + element.offsetHeight + scrollOffset >= element.scrollHeight) {
       // Scrolled to bottom.
       if (isItemLoaded(data.length)) {
         return;
       }
       _loadMoreItems('end');
-    } else if (element.scrollTop <= SCROLL_OFFSET) {
+    } else if (element.scrollTop <= scrollOffset) {
       // Scrolled to top.
       if (isItemLoaded(-1)) {
         return;
       }
       _loadMoreItems('start');
     }
-  }, [data, isItemLoaded, itemCount, _loadMoreItems, outerRef]);
+  }, [data, isItemLoaded, itemCount, scrollOffset, _loadMoreItems, outerRef]);
 
   return <>{children({onItemsRendered})}</>;
 };
