@@ -6,7 +6,7 @@ type Direction = 'start' | 'end';
 type Props = {
   isItemLoaded: (index: number) => boolean;
   loadMoreItems: (direction: Direction) => Promise<unknown>;
-  onItemsRendered: OnItemsRendered;
+  onItemsRendered?: OnItemsRendered;
   itemCount: number;
   threshold: number;
   /** offset value for smooth infinite scrolling. */
@@ -40,7 +40,7 @@ const InfiniteScroll = ({
 
   const _onItemsRendered = useCallback<OnItemsRendered>((args) => {
     const {visibleStartIndex, visibleStopIndex} = args;
-    onItemsRendered(args);
+    onItemsRendered?.(args);
     if (data.length === itemCount) {
       // All items are loaded and visible.
       return;
