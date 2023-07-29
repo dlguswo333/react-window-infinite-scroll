@@ -15,7 +15,7 @@ module.exports = {
     'eol-last': 'error',
     'comma-dangle': ['error', {
       'arrays': 'never',
-      'objects': 'only-multiline',
+      'objects': 'always-multiline',
       'imports': 'never',
       'exports': 'never',
       'functions': 'never'
