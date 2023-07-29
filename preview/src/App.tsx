@@ -24,6 +24,7 @@ const App = () => {
         itemCount={itemCount}
         threshold={1}
         outerRef={outerRef}
+        scrollOffset={30}
       >
         {({onItemsRendered}) => <FixedSizeList
           height={500}

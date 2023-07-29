@@ -21,11 +21,14 @@ type Props = {
   /**
    * Threshold value to load more items on items rendered.
    * When 1st ~ *threshold*th first item at either end is visible, `loadMoreItems` will be called.
-   * Setting the value as `0` disables calling `loadMoreItems` on items rendered.
+   * Setting the value `0` or smaller may disable calling `loadMoreItems` on items rendered.
    */
   threshold: number;
-  /** offset value (in `px`) for smooth infinite scrolling. Default value is `5`. */
-  scrollOffset?: number;
+  /**
+   * offset value (in `px`) for smooth infinite scrolling.
+   * Recommends value equal to minimum height of items or higher.
+  */
+  scrollOffset: number;
   /** children that receives `onItemsRendered` props and returns `ReactNode`. */
   children: ({onItemsRendered}: {onItemsRendered: OnItemsRendered}) => ReactNode;
   /** `ref` to the outer continer element. */
@@ -34,17 +37,13 @@ type Props = {
   data: unknown[];
 }
 
-const DEFAULT_PROP_VALUES = {
-  SCROLL_OFFSET: 5,
-};
-
 const InfiniteScroll = ({
   isItemLoaded,
   loadMoreItems,
   onItemsRendered,
   itemCount,
   threshold,
-  scrollOffset = DEFAULT_PROP_VALUES.SCROLL_OFFSET,
+  scrollOffset,
   children,
   outerRef,
   data,
