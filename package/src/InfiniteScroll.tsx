@@ -4,15 +4,33 @@ import {ListOnItemsRenderedProps} from 'react-window';
 type OnItemsRendered = (props: ListOnItemsRenderedProps) => unknown;
 type Direction = 'start' | 'end';
 type Props = {
+  /** Return whether an item at the index has been loaded. */
   isItemLoaded: (index: number) => boolean;
+  /**
+   * Callback to load more items.
+   * Receives a parameter `'start'` or `'end'` to load items at the start or end.
+   */
   loadMoreItems: (direction: Direction) => Promise<unknown>;
+  /**
+   * Callback to be called when items have been rendered.
+   * This prop is optional.
+   */
   onItemsRendered?: OnItemsRendered;
+  /** Returns the number of items. Can be arbitrary large if the total size is unknown. */
   itemCount: number;
+  /**
+   * Threshold value to load more items on items rendered.
+   * When 1st ~ *threshold*th first item at either end is visible, `loadMoreItems` will be called.
+   * Setting the value as `0` disables calling `loadMoreItems` on items rendered.
+   */
   threshold: number;
-  /** offset value (px) for smooth infinite scrolling. Default value is `5`. */
+  /** offset value (in `px`) for smooth infinite scrolling. Default value is `5`. */
   scrollOffset?: number;
+  /** children that receives `onItemsRendered` props and returns `ReactNode`. */
   children: ({onItemsRendered}: {onItemsRendered: OnItemsRendered}) => ReactNode;
+  /** `ref` to the outer continer element. */
   outerRef: React.RefObject<HTMLElement>;
+  /** *Actual* data that needs to be virtually scrolled.  */
   data: unknown[];
 }
 
@@ -31,7 +49,7 @@ const InfiniteScroll = ({
   outerRef,
   data,
 }: Props) => {
-  /** To prevent call loadMoreItems redundantly, in both `onItemsRendered` and data change event. */
+  /** To prevent call loadMoreItems redundantly, in both `onItemsRendered` and on data change. */
   const pending = useRef<boolean>(false);
   const _loadMoreItems = useCallback(async (direction: Direction) => {
     if (pending.current) {
