@@ -115,7 +115,9 @@ const InfiniteScroll = ({
     if (prevHeight.current === null || outerRef.current === null) {
       return;
     }
-    outerRef.current.scrollTop = outerRef.current.scrollHeight - prevHeight.current;
+    outerRef.current.scrollTop = Math.max(
+      outerRef.current.scrollHeight - prevHeight.current, scrollOffset
+    );
     prevHeight.current = null;
   });
 
