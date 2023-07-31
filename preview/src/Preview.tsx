@@ -3,8 +3,12 @@ import useReactWindow from './useReactWindow';
 import {FixedSizeList} from 'react-window';
 import {CSSProperties, useRef} from 'react';
 
-const Preview = () => {
-  const {data, loadMoreItems, isItemsLoaded, itemCount} = useReactWindow();
+type Props = {
+  type: Parameters<typeof useReactWindow>[0]
+}
+
+const Preview = ({type}: Props) => {
+  const {data, loadMoreItems, isItemsLoaded, itemCount} = useReactWindow(type);
   const outerRef = useRef<HTMLElement>(null);
 
   const Row = ({index, style}: {index: number, style: CSSProperties}) => (

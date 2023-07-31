@@ -7,7 +7,8 @@ const App = () => {
       <h1>react-window-infinite-scroll preview</h1>
     </header>
     <main className='Preview-Main'>
-      <Preview />
+      <Preview type={1} />
+      <Preview type={2} />
     </main>
   </>;
 };
