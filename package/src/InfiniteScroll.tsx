@@ -37,6 +37,9 @@ type Props = {
   data: unknown[];
 }
 
+/** This is arbitrary number thus subject to change. */
+const TIMEOUT_INTERVAL = 5;
+
 const InfiniteScroll = ({
   isItemLoaded,
   loadMoreItems,
@@ -51,9 +54,14 @@ const InfiniteScroll = ({
   /** To prevent call loadMoreItems redundantly, in both `onItemsRendered` and on data change. */
   const pending = useRef<boolean>(false);
   const prevHeight = useRef<number | null>(null);
+  /** Prevent calling `loadMoreItems` frequently when loading items at the start. */
+  const shouldBlockLoadMoreItems = useRef<number | null>(null);
 
   const _loadMoreItems = useCallback(async (direction: Direction) => {
     if (pending.current || !outerRef.current) {
+      return;
+    }
+    if (shouldBlockLoadMoreItems.current !== null) {
       return;
     }
     pending.current = true;
@@ -119,6 +127,15 @@ const InfiniteScroll = ({
       outerRef.current.scrollHeight - prevHeight.current, scrollOffset
     );
     prevHeight.current = null;
+
+    shouldBlockLoadMoreItems.current = setTimeout(() => {
+      shouldBlockLoadMoreItems.current = null;
+    }, TIMEOUT_INTERVAL);
+    return () => {
+      if (shouldBlockLoadMoreItems.current !== null) {
+        clearTimeout(shouldBlockLoadMoreItems.current);
+      }
+    };
   });
 
   return <>{children({onItemsRendered: _onItemsRendered})}</>;
