@@ -1,4 +1,4 @@
-import {ReactNode, useCallback, useEffect, useRef} from 'react';
+import {ReactNode, useCallback, useEffect, useLayoutEffect, useRef} from 'react';
 import {ListOnItemsRenderedProps} from 'react-window';
 
 type OnItemsRendered = (props: ListOnItemsRenderedProps) => unknown;
@@ -50,14 +50,20 @@ const InfiniteScroll = ({
 }: Props) => {
   /** To prevent call loadMoreItems redundantly, in both `onItemsRendered` and on data change. */
   const pending = useRef<boolean>(false);
+  const prevHeight = useRef<number | null>(null);
+
   const _loadMoreItems = useCallback(async (direction: Direction) => {
-    if (pending.current) {
+    if (pending.current || !outerRef.current) {
       return;
     }
     pending.current = true;
+    // Record previous height to scroll before browser repaint.
+    if (direction === 'start') {
+      prevHeight.current = outerRef.current.scrollHeight;
+    }
     await loadMoreItems(direction);
     pending.current = false;
-  }, [loadMoreItems]);
+  }, [outerRef, loadMoreItems]);
 
   const _onItemsRendered = useCallback<OnItemsRendered>((args) => {
     const {visibleStartIndex, visibleStopIndex} = args;
@@ -102,6 +108,16 @@ const InfiniteScroll = ({
       _loadMoreItems('start');
     }
   }, [data, isItemLoaded, itemCount, scrollOffset, _loadMoreItems, outerRef]);
+
+  // Scroll downward to prevent calling loadMoreItems infinitely.
+  // Do not pass deps argument as the effect should run with ref value.
+  useLayoutEffect(() => {
+    if (prevHeight.current === null || outerRef.current === null) {
+      return;
+    }
+    outerRef.current.scrollTop = outerRef.current.scrollHeight - prevHeight.current;
+    prevHeight.current = null;
+  });
 
   return <>{children({onItemsRendered: _onItemsRendered})}</>;
 };
