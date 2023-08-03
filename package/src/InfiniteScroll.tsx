@@ -54,14 +54,19 @@ const InfiniteScroll = ({
   /** To prevent call loadMoreItems redundantly, in both `onItemsRendered` and on data change. */
   const pending = useRef<boolean>(false);
   const prevHeight = useRef<number | null>(null);
-  /** Prevent calling `loadMoreItems` frequently when loading items at the start. */
+  /**
+   * Prevent calling `loadMoreItems` frequently when loading items at the start.
+   * However, do this only if enough items are loaded that
+   * the `outerRef`'s scrollHeight is large enough to scroll the element.
+   */
   const shouldBlockLoadMoreItems = useRef<number | null>(null);
 
   const _loadMoreItems = useCallback(async (direction: Direction) => {
     if (pending.current || !outerRef.current) {
       return;
     }
-    if (shouldBlockLoadMoreItems.current !== null) {
+    const loadedEnoughItems = outerRef.current.clientHeight + scrollOffset < outerRef.current.scrollHeight;
+    if (shouldBlockLoadMoreItems.current !== null && loadedEnoughItems) {
       return;
     }
     pending.current = true;
@@ -71,7 +76,7 @@ const InfiniteScroll = ({
     }
     await loadMoreItems(direction);
     pending.current = false;
-  }, [outerRef, loadMoreItems]);
+  }, [outerRef, loadMoreItems, scrollOffset]);
 
   const _onItemsRendered = useCallback<OnItemsRendered>((args) => {
     const {visibleStartIndex, visibleStopIndex} = args;
@@ -80,17 +85,11 @@ const InfiniteScroll = ({
       // All items are loaded and visible.
       return;
     }
-    if (visibleStopIndex >= data.length - threshold) {
+    if (visibleStopIndex >= data.length - threshold && !isItemLoaded(data.length)) {
       // Last 'threshold' items are visible.
-      if (isItemLoaded(data.length)) {
-        return;
-      }
       _loadMoreItems('end');
-    } else if (visibleStartIndex <= threshold - 1) {
+    } else if (visibleStartIndex <= threshold - 1 && !isItemLoaded(-1)) {
       // First 'threshold' items are visible.
-      if (isItemLoaded(-1)) {
-        return;
-      }
       _loadMoreItems('start');
     }
   }, [data.length, threshold, itemCount, isItemLoaded, _loadMoreItems, onItemsRendered]);
@@ -102,17 +101,13 @@ const InfiniteScroll = ({
       return;
     }
     const element = outerRef.current;
-    if (element.scrollTop + element.offsetHeight + scrollOffset >= element.scrollHeight) {
+    const isAtBottom = element.scrollTop + element.offsetHeight + scrollOffset >= element.scrollHeight;
+    const isAtTop = element.scrollTop <= scrollOffset;
+    if (isAtBottom && !isItemLoaded(data.length)) {
       // Scrolled to bottom.
-      if (isItemLoaded(data.length)) {
-        return;
-      }
       _loadMoreItems('end');
-    } else if (element.scrollTop <= scrollOffset) {
+    } else if (isAtTop && !isItemLoaded(-1)) {
       // Scrolled to top.
-      if (isItemLoaded(-1)) {
-        return;
-      }
       _loadMoreItems('start');
     }
   }, [data, isItemLoaded, itemCount, scrollOffset, _loadMoreItems, outerRef]);
