@@ -119,6 +119,7 @@ const InfiniteScroll = ({
 
   // Scroll downward to prevent calling loadMoreItems infinitely.
   // Do not pass deps argument as the effect should run with ref value.
+  // Since it checks `prevHeight`, the function will execute only after loadMoreItems('start') is called.
   useLayoutEffect(() => {
     if (prevHeight.current === null || outerRef.current === null) {
       return;

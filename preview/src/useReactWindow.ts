@@ -4,8 +4,17 @@ import {sleep} from './util';
 const MAX_LENGTH = 500;
 const SLEEP_MS = 100;
 
-const useReactWindow = (type: 1 | 2) => {
-  const [data, setData] = useState<string[]>(type === 1 ? [] : ['data 150']);
+const useReactWindow = (type: 1 | 2 | 3) => {
+  const [data, setData] = useState<string[]>(() => {
+    switch (type) {
+    case 1:
+      return [];
+    case 2:
+      return ['data 150'];
+    case 3:
+      return ['data 500'];
+    }
+  });
   const isFetching = useRef<boolean>(false);
   const itemCount = useMemo(() => data.length + (data.length < MAX_LENGTH ? 1 : 0), [data.length]);
 
@@ -47,6 +56,19 @@ const useReactWindow = (type: 1 | 2) => {
       isFetching.current = false;
       break;
     }
+    case 3: {
+      const newValue = `data ${Number(/(-?\d+)/.exec(data[0])![1]) - 1}`;
+      await sleep(SLEEP_MS);
+      setData(data => {
+        if (data.length >= MAX_LENGTH) {
+        // This must not be reached.
+          throw Error(`data length exceeds MAX_LENGTH:${MAX_LENGTH}`);
+        }
+        return [newValue, ...data];
+      });
+      isFetching.current = false;
+      break;
+    }
     }
   }, [data, type]);
 
@@ -56,6 +78,8 @@ const useReactWindow = (type: 1 | 2) => {
       return index >= MAX_LENGTH || index < data.length;
     case 2:
       return data.length >= MAX_LENGTH;
+    case 3:
+      return data.length >= MAX_LENGTH || index >= 0;
     }
   }, [data.length, type]);
 

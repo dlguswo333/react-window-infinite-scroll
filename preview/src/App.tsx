@@ -9,6 +9,7 @@ const App = () => {
     <main className='Preview-Main'>
       <Preview type={1} />
       <Preview type={2} />
+      <Preview type={3} />
     </main>
   </>;
 };
