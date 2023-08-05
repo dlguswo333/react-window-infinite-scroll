@@ -33,7 +33,7 @@ type Props = {
   children: ({onItemsRendered}: {onItemsRendered: OnItemsRendered}) => ReactNode;
   /** `ref` to the outer continer element. */
   outerRef: React.RefObject<HTMLElement>;
-  /** *Actual* data that needs to be virtually scrolled.  */
+  /** *Actual* data that needs to be virtually scrolled. */
   data: unknown[];
 }
 
