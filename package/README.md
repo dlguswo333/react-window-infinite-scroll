@@ -72,6 +72,9 @@ Here is a simple example where you can do infinite scroll with react-window-infi
 ```
 
 # FAQ
+## What is the require version of `react`?
+You need to have react 17 or higher because we utilize [new JSX transform][new-jsx-transform].
+
 ## In which case `loadMoreitems` might cancel loading more items?
 In some cases, where `loadMoreItems` API author does not like to call the API too frequently,
 he/she might add a conditional statement.
@@ -116,6 +119,13 @@ even when you have tiny scrollable height.
 Data change event will load more items in that case.
 
 # Development
+## Deploy
+```shell
+npm run deploy
+```
 
+Do not run `npm publish` in root directory or it might publish monorepo project.
+We have `private:true` in root package.json to prevent the situation.
 
 [react-window]: https://github.com/bvaughn/react-window
+[new-jsx-transform]: https://legacy.reactjs.org/blog/2020/09/22/introducing-the-new-jsx-transform.html
