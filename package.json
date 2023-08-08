@@ -8,7 +8,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "npm run build -w package -w preview",
     "lint": "eslint .",
-    "start": "concurrently \"npm run watch -w package\" \"npm start -w preview\""
+    "start": "concurrently \"npm run watch -w package\" \"npm start -w preview\"",
+    "deploy": "npm publish -w package"
   },
   "workspaces": [
     "preview",

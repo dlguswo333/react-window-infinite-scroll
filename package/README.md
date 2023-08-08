@@ -5,8 +5,10 @@ specifically designed for [react-window][react-window].
 # Why react-window-infinite-scroll?
 react-window-infinite-scroll is to reliably load more items even when the following conditions hold:
 - `loadMoreItems` callback might cancel fetching more items.
-- There are not enough initial items to fill the scrollable element, thereby noway to induce `onItemsRendered` callback.
+- There are not enough initial items to fill the scrollable element, thereby no way to induce `onItemsRendered` callback.
 - Not only do you need to scroll infinitely to the end, but also to the top.
+
+![diagram](./doc/diagram.png)
 
 # Props (Properties)
 ```ts
@@ -72,8 +74,11 @@ Here is a simple example where you can do infinite scroll with react-window-infi
 ```
 
 # FAQ
-## In which case `loadMoreitems` might cancel loading more items?
-In some cases, where `loadMoreItems` API author does not like to call the API too frequently,
+## What is the required version of `react`?
+You need to have react 17 or higher because we utilize [new JSX transform][new-jsx-transform].
+
+## In which cases `loadMoreitems` might cancel loading more items?
+In some cases, where `loadMoreItems` API author does not like it to be called too frequently,
 he/she might add a conditional statement.
 The reasons for this may vary, from improving browser performance to preventing server overload.
 
@@ -81,7 +86,7 @@ The following is an example code where `loadMoreItems` might cancel fetching mor
 
 ```ts
 const loadMoreItems = () => {
-  if(isFetchingAlready) {
+  if (isFetchingAlready) {
     return;
   }
   isFetchingAlready = true;
@@ -91,31 +96,41 @@ const loadMoreItems = () => {
 ```
 
 In this case, some infinite scrolling packages do not work due to the blocking.
-However, with react-window-infinite-scroll, we try our best to mitigate the problem,
-by subscribing to data changes and item rendered events.
+However, react-window-infinite-scroll tries its best to mitigate the problem,
+by subscribing to both data changes and item rendered events.<br>
+When fetching is complete, the conditional value will be reset,
+and then the data changes or item render events will be fired afterwards.
 
 ## Why `scrollOffset` prop is not optional?
 `scrollOffset` shall not be optional since it is crucial to load more items.
-With it being optional, infinite scroll could have not load more items when the outer element's height
-and the inner element's height is almost equal, `onItemsRendered` is not likely to be called,
-but scrollOffset is too small to load more items.
+With it being optional, infinite scroll could have not loaded more items
+when the outer element's height and the inner element's height are almost equal.
+thus `onItemsRendered` is not likely to be called,
+and also `scrollOffset` is too small to call `loadMoreItems`.
 
 That is why we recommend you set the value as big as the minimum height of items being rendered.
 
-## Why use both `onItemsRendered` and data change events?
-This is to load items reliably.
+## Why subscribe to both data change events and `onItemsRendered`?
+This is to load more items reliably.
 When many rows are loaded at once,
 data change events would most likely not to load more items
 since the scrollbar is not near the bottom or the top.
 Later on, when you scroll the component, `onItemsRendered` will fire and load more items in that case.
 
-In another case, when you have as many rows as the component is barely filled,
-`onItemsRendered` would most likely not to fire,
+In another case, where you have as many rows as the infinite scrolling component is barely filled,
+`onItemsRendered` would most likely not to be called,
 (Especially when you have big `overscanCount` prop value of `react-window`.)
-even when you have tiny scrollable height.
-Data change event will load more items in that case.
+even though you have tiny (too tiny!) scrollable height.
+Data change event will help load more items in that case.
 
 # Development
+## Deploy
+```shell
+npm run deploy
+```
 
+Do not run `npm publish` in root directory or it might publish monorepo project.
+We have `private:true` in root package.json to prevent the situation.
 
 [react-window]: https://github.com/bvaughn/react-window
+[new-jsx-transform]: https://legacy.reactjs.org/blog/2020/09/22/introducing-the-new-jsx-transform.html
