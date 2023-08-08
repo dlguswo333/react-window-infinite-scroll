@@ -8,6 +8,8 @@ react-window-infinite-scroll is to reliably load more items even when the follow
 - There are not enough initial items to fill the scrollable element, thereby noway to induce `onItemsRendered` callback.
 - Not only do you need to scroll infinitely to the end, but also to the top.
 
+![diagram](./doc/diagram.png)
+
 # Props (Properties)
 ```ts
 type Props = {
