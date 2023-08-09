@@ -126,6 +126,11 @@ In another case, where you have as many rows as the infinite scrolling component
 even though you have tiny (too tiny!) scrollable height.
 Data change event will help load more items in that case.
 
+# Changelog
+## v0.0.2
+- Allow `outerRef` prop to have `HTMLElement` type
+- Improve README
+
 # Development
 ## Deploy
 ```shell
