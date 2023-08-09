@@ -40,8 +40,8 @@ type Props = {
   scrollOffset: number;
   /** children that receives `onItemsRendered` props and returns `ReactNode`. */
   children: ({onItemsRendered}: {onItemsRendered: OnItemsRendered}) => ReactNode;
-  /** `ref` to the outer continer element. */
-  outerRef: React.RefObject<HTMLElement>;
+  /** `ref` to the outer continer element. Passing the HTML element directly is also permitted. */
+  outerRef: React.RefObject<HTMLElement> | HTMLElement;
   /** *Actual* data that needs to be virtually scrolled. */
   data: unknown[];
 }

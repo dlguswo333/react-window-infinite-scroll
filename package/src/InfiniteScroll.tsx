@@ -31,8 +31,8 @@ type Props = {
   scrollOffset: number;
   /** children that receives `onItemsRendered` props and returns `ReactNode`. */
   children: ({onItemsRendered}: {onItemsRendered: OnItemsRendered}) => ReactNode;
-  /** `ref` to the outer continer element. */
-  outerRef: React.RefObject<HTMLElement>;
+  /** `ref` to the outer continer element. Passing the HTML element directly is also permitted. */
+  outerRef: React.RefObject<HTMLElement> | HTMLElement;
   /** *Actual* data that needs to be virtually scrolled. */
   data: unknown[];
 }
@@ -60,23 +60,25 @@ const InfiniteScroll = ({
    * the `outerRef`'s scrollHeight is large enough to scroll the element.
    */
   const shouldBlockLoadMoreItems = useRef<number | null>(null);
+  const getOuterElement = useCallback(() => 'current' in outerRef ? outerRef.current : outerRef, [outerRef]);
 
   const _loadMoreItems = useCallback(async (direction: Direction) => {
-    if (pending.current || !outerRef.current) {
+    const outerElement = getOuterElement();
+    if (pending.current || !outerElement) {
       return;
     }
-    const loadedEnoughItems = outerRef.current.clientHeight + scrollOffset < outerRef.current.scrollHeight;
+    const loadedEnoughItems = outerElement.clientHeight + scrollOffset < outerElement.scrollHeight;
     if (shouldBlockLoadMoreItems.current !== null && loadedEnoughItems) {
       return;
     }
     pending.current = true;
     // Record previous height to scroll before browser repaint.
     if (direction === 'start') {
-      prevHeight.current = outerRef.current.scrollHeight;
+      prevHeight.current = outerElement.scrollHeight;
     }
     await loadMoreItems(direction);
     pending.current = false;
-  }, [outerRef, loadMoreItems, scrollOffset]);
+  }, [getOuterElement, loadMoreItems, scrollOffset]);
 
   const _onItemsRendered = useCallback<OnItemsRendered>((args) => {
     const {visibleStartIndex, visibleStopIndex} = args;
@@ -97,10 +99,11 @@ const InfiniteScroll = ({
   // Call loadMoreItems when data changes to fetch data enough to fill the screen
   // without user having to scroll to induce onItemsRendered callback.
   useEffect(() => {
-    if (!outerRef.current) {
+    const outerElement = getOuterElement();
+    if (!outerElement) {
       return;
     }
-    const element = outerRef.current;
+    const element = outerElement;
     const isAtBottom = element.scrollTop + element.offsetHeight + scrollOffset >= element.scrollHeight;
     const isAtTop = element.scrollTop <= scrollOffset;
     if (isAtBottom && !isItemLoaded(data.length)) {
@@ -110,17 +113,18 @@ const InfiniteScroll = ({
       // Scrolled to top.
       _loadMoreItems('start');
     }
-  }, [data, isItemLoaded, itemCount, scrollOffset, _loadMoreItems, outerRef]);
+  }, [data, isItemLoaded, itemCount, scrollOffset, _loadMoreItems, getOuterElement]);
 
   // Scroll downward to prevent calling loadMoreItems infinitely.
   // Do not pass deps argument as the effect should run with ref value.
   // Since it checks `prevHeight`, the function will execute only after loadMoreItems('start') is called.
   useLayoutEffect(() => {
-    if (prevHeight.current === null || outerRef.current === null) {
+    const outerElement = getOuterElement();
+    if (prevHeight.current === null || outerElement === null) {
       return;
     }
-    outerRef.current.scrollTop = Math.max(
-      outerRef.current.scrollHeight - prevHeight.current, scrollOffset
+    outerElement.scrollTop = Math.max(
+      outerElement.scrollHeight - prevHeight.current, scrollOffset
     );
     prevHeight.current = null;
 
