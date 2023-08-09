@@ -2,13 +2,16 @@
 react-window-infinite-scroll is a infinite scroll library
 specifically designed for [react-window][react-window].
 
+github link: <https://github.com/dlguswo333/react-window-infinite-scroll>
+npm link: <https://www.npmjs.com/package/react-window-infinite-scroll>
+
 # Why react-window-infinite-scroll?
 react-window-infinite-scroll is to reliably load more items even when the following conditions hold:
 - `loadMoreItems` callback might cancel fetching more items.
 - There are not enough initial items to fill the scrollable element, thereby no way to induce `onItemsRendered` callback.
 - Not only do you need to scroll infinitely to the end, but also to the top.
 
-![diagram](./doc/diagram.png)
+![diagram](https://github.com/dlguswo333/react-window-infinite-scroll/blob/HEAD/package/doc/diagram.png?raw=true)
 
 # Props (Properties)
 ```ts
