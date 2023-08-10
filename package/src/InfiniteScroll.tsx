@@ -60,7 +60,11 @@ const InfiniteScroll = ({
    * the `outerRef`'s scrollHeight is large enough to scroll the element.
    */
   const shouldBlockLoadMoreItems = useRef<number | null>(null);
-  const getOuterElement = useCallback(() => 'current' in outerRef ? outerRef.current : outerRef, [outerRef]);
+  const getOuterElement = useCallback(() =>
+    !outerRef ?
+      null :
+      'current' in outerRef ? outerRef.current : outerRef,
+  [outerRef]);
 
   const _loadMoreItems = useCallback(async (direction: Direction) => {
     const outerElement = getOuterElement();
