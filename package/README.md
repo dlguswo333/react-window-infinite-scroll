@@ -127,6 +127,9 @@ even though you have tiny (too tiny!) scrollable height.
 Data change event will help load more items in that case.
 
 # Changelog
+## v0.0.3
+- Fix an error where `outerRef` has `null` or `undefined` value.
+
 ## v0.0.2
 - Allow `outerRef` prop to have `HTMLElement` type
 - Improve README
