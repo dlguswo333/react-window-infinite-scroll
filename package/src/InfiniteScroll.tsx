@@ -132,7 +132,7 @@ const InfiniteScroll = ({
     );
     prevHeight.current = null;
 
-    shouldBlockLoadMoreItems.current = setTimeout(() => {
+    shouldBlockLoadMoreItems.current = window.setTimeout(() => {
       shouldBlockLoadMoreItems.current = null;
     }, TIMEOUT_INTERVAL);
     return () => {
