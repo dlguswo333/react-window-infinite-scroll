@@ -5,7 +5,7 @@
   "description": "",
   "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "npm test -w package",
     "build": "npm run build -w package -w preview",
     "lint": "eslint .",
     "start": "concurrently \"npm run watch -w package\" \"npm start -w preview\"",
