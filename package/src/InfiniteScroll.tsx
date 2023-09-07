@@ -1,8 +1,10 @@
 import {ReactNode, useCallback, useEffect, useLayoutEffect, useRef} from 'react';
 import {ListOnItemsRenderedProps} from 'react-window';
+import {isPromise} from './util';
 
 type OnItemsRendered = (props: ListOnItemsRenderedProps) => unknown;
 type Direction = 'start' | 'end';
+// [NOTE] Make sure to update README!
 type Props = {
   /** Return whether an item at the index has been loaded. */
   isItemLoaded: (index: number) => boolean;
@@ -10,7 +12,7 @@ type Props = {
    * Callback to load more items.
    * Receives a parameter `'start'` or `'end'` to load items at the start or end.
    */
-  loadMoreItems: (direction: Direction) => Promise<unknown>;
+  loadMoreItems: (direction: Direction) => Promise<unknown> | unknown;
   /**
    * Callback to be called when items have been rendered.
    * This prop is optional.
@@ -80,7 +82,10 @@ const InfiniteScroll = ({
     if (direction === 'start') {
       prevHeight.current = outerElement.scrollHeight;
     }
-    await loadMoreItems(direction);
+    const ret = loadMoreItems(direction);
+    if (isPromise(ret)) {
+      await ret;
+    }
     pending.current = false;
   }, [getOuterElement, loadMoreItems, scrollOffset]);
 

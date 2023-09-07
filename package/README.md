@@ -22,7 +22,7 @@ type Props = {
    * Callback to load more items.
    * Receives a parameter `'start'` or `'end'` to load items at the start or end.
    */
-  loadMoreItems: (direction: Direction) => Promise<unknown>;
+  loadMoreItems: (direction: Direction) => Promise<unknown> | unknown;
   /**
    * Callback to be called when items have been rendered.
    * This prop is optional.
