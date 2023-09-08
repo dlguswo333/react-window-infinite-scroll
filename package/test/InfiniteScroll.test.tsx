@@ -4,11 +4,6 @@ import React from 'react';
 
 test.use({viewport: {width: 1000, height: 1000}});
 
-test('With static data 3', async ({mount}) => {
-  const component = await mount(<div>Hello</div>);
-  await expect(component).toContainText('Hello');
-});
-
 test('With static data 1', async ({mount}) => {
   const component = await mount(<StaticData1 />);
   await expect(component).toContainText('0');
