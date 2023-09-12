@@ -126,6 +126,43 @@ In another case, where you have as many rows as the infinite scrolling component
 even though you have tiny (too tiny!) scrollable height.
 Data change event will help load more items in that case.
 
+## `loadMoreItems` is getting called too many/few times.
+There maybe several bugs and issues with the package.
+Some possible issues with the component are that it may call `loadMoreItems` too many times,
+or that it may not call `loadMoreItems`.
+
+One feasible reason why it calls `loadMoreItems` too many times is that
+`loadMoreItems` does not *await* until `data` changes and return.
+This is because react-window-infinite-scroll tries to prevent excessive `loadMoreItems` calls for performance,
+by waiting for `loadMoreItems` to finish one at a time.<br>
+Even if `loadMoreItems` finishes earlier than `data` changes,
+the package might not notice it and call `loadMoreItems` and recall once more when `data` changes.
+If `loadMoreItems` has something to do with `promise`s,
+*wait* for the responses and update the `data`. Please do not exit right after making API calls
+since it can lead to undefined behaviors.
+
+```jsx
+// Please don't do this ✖️
+const loadMoreItems = () => {
+  fetchFromRemote().then((response) => {
+    setData(data => [...data, response]);
+  });
+};
+
+// Or this ✖️
+const loadMoreItems = () => {
+  fetchFromRemote((response) => {
+    setData(data => [...data, response]);
+  });
+};
+
+// Please do this ✔️
+const loadMoreItems = async () => {
+  const response = await fetchFromRemote();
+  setData(data => [...data, response]);
+};
+```
+
 # Changelog
 ## v0.0.3
 - Fix an error where `outerRef` has `null` or `undefined` value.
