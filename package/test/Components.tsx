@@ -69,7 +69,12 @@ export const StaticData2 = () => {
   </InfiniteScroll>;
 };
 
-export const SimpleDynamicData = ({hasInitialData, howToLoad}: {hasInitialData: boolean; howToLoad: 'sync' | 'instantAsync' | 'fastAsync' | 'slowAsync'}) => {
+
+/**
+ * It will show 10 items at once since the container has height of 300 and each item of 30.
+ */
+export const SimpleDynamicData = ({hasInitialData, howToLoad, longerData}: {hasInitialData: boolean; howToLoad: 'sync' | 'instantAsync' | 'fastAsync' | 'slowAsync', longerData: boolean;}) => {
+  const maxDataSize = longerData ? 100 : 3;
   const [data, setData] = useState<string[]>(hasInitialData ? ['0'] : []);
   const outerRef = useRef<HTMLElement>(null);
   const loadMoreItemsSync = () => {
@@ -82,10 +87,10 @@ export const SimpleDynamicData = ({hasInitialData, howToLoad}: {hasInitialData: 
     setData(data.concat(data.length.toString()));
   };
   const isItemsLoaded = (index: number) => {
-    const ret = !(index === data.length && index < 3);
+    const ret = !(index === data.length && index < maxDataSize);
     return ret;
   };
-  const itemCount = data.length + (data.length < 3 ? 1 : 0);
+  const itemCount = data.length + (data.length < maxDataSize ? 1 : 0);
 
   const Row = ({index, style}: {index: number, style: CSSProperties}) => (
     <div style={style}>{data[index]}</div>
