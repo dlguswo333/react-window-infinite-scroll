@@ -117,8 +117,8 @@ const InfiniteScroll = ({
       return;
     }
     const element = outerElement;
-    const isAtBottom = element.scrollTop + element.offsetHeight + scrollOffset >= element.scrollHeight;
-    const isAtTop = element.scrollTop <= scrollOffset;
+    const isAtBottom = element.scrollTop + element.offsetHeight + scrollOffset > element.scrollHeight;
+    const isAtTop = element.scrollTop < scrollOffset;
     if (isAtBottom && !isItemLoaded(data.length)) {
       // Scrolled to bottom.
       _loadMoreItems('end');
@@ -147,6 +147,8 @@ const InfiniteScroll = ({
     return () => {
       if (shouldBlockLoadMoreItems.current !== null) {
         clearTimeout(shouldBlockLoadMoreItems.current);
+        // Need to reset the value because the function may return early and does not reassign.
+        shouldBlockLoadMoreItems.current = null;
       }
     };
   });
