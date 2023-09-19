@@ -117,8 +117,8 @@ const InfiniteScroll = ({
       return;
     }
     const element = outerElement;
-    const isAtBottom = element.scrollTop + element.offsetHeight + scrollOffset >= element.scrollHeight;
-    const isAtTop = element.scrollTop <= scrollOffset;
+    const isAtBottom = element.scrollTop + element.offsetHeight + scrollOffset > element.scrollHeight;
+    const isAtTop = element.scrollTop < scrollOffset;
     if (isAtBottom && !isItemLoaded(data.length)) {
       // Scrolled to bottom.
       _loadMoreItems('end');
@@ -132,23 +132,34 @@ const InfiniteScroll = ({
   // Do not pass deps argument as the effect should run with ref value.
   // Since it checks `prevHeight`, the function will execute only after loadMoreItems('start') is called.
   useLayoutEffect(() => {
+    const set = () => {
+      shouldBlockLoadMoreItems.current = setTimeout(() => {
+        shouldBlockLoadMoreItems.current = null;
+      }, TIMEOUT_INTERVAL);
+    };
+    const reset = () => {
+      if (shouldBlockLoadMoreItems.current !== null) {
+        clearTimeout(shouldBlockLoadMoreItems.current);
+      }
+    };
     const outerElement = getOuterElement();
+
     if (prevHeight.current === null || outerElement === null) {
-      return;
+      if (shouldBlockLoadMoreItems.current !== null) {
+        // Set the flag only when the flag is truthy
+        // to gurantee to load more items at 'start' for the first time.
+        set();
+      }
+      return reset;
     }
+
     outerElement.scrollTop = Math.max(
       outerElement.scrollHeight - prevHeight.current, scrollOffset
     );
     prevHeight.current = null;
 
-    shouldBlockLoadMoreItems.current = setTimeout(() => {
-      shouldBlockLoadMoreItems.current = null;
-    }, TIMEOUT_INTERVAL);
-    return () => {
-      if (shouldBlockLoadMoreItems.current !== null) {
-        clearTimeout(shouldBlockLoadMoreItems.current);
-      }
-    };
+    set();
+    return reset;
   });
 
   return <>{children({onItemsRendered: _onItemsRendered})}</>;
