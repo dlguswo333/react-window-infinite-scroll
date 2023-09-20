@@ -1,7 +1,15 @@
-import {CSSProperties, useRef, useState} from 'react';
+import {CSSProperties, useEffect, useRef, useState} from 'react';
 import InfiniteScroll from '../src/InfiniteScroll';
 import {FixedSizeList} from 'react-window';
 import React from 'react';
+
+// This is to access data value from playwright test context.
+// Refer https://playwright.dev/docs/evaluating/
+declare global {
+  interface Window {
+    data: unknown[];
+  }
+}
 
 export const StaticData1 = () => {
   const data = ['0'];
@@ -104,6 +112,64 @@ export const SimpleDynamicData = ({hasInitialData, howToLoad, longerData}: {hasI
     threshold={1}
     outerRef={outerRef}
     scrollOffset={30}
+  >
+    {({onItemsRendered}) => <FixedSizeList
+      height={300}
+      itemCount={itemCount}
+      width='100%'
+      onItemsRendered={onItemsRendered}
+      itemSize={30}
+      outerRef={outerRef}
+      className='Outer'
+    >
+      {Row}
+    </FixedSizeList>}
+  </InfiniteScroll>;
+};
+
+/**
+ * It will show 10 items at once since the container has height of 300 and each item of 30.
+ */
+export const BiDirectDynamicData = ({hasInitialData, howToLoad}: {hasInitialData: boolean; howToLoad: 'sync' | 'instantAsync' | 'fastAsync' | 'slowAsync'}) => {
+  const maxDataSize = 100;
+  const [data, setData] = useState<string[]>(hasInitialData ? ['0'] : []);
+  const outerRef = useRef<HTMLElement>(null);
+  const getNewData = (direction: 'start' | 'end') => (
+    direction === 'start' ?
+      [`${Number(data[0]) - 1}`, ...data] :
+      [...data, data.length === 0 ? '0' : `${Number(data[data.length - 1]) + 1}`]
+  );
+  const loadMoreItemsSync = (direction: 'start' | 'end') => {
+    setData(getNewData(direction));
+  };
+  const loadMoreItemsAsync = async (direction: 'start' | 'end') => {
+    if (howToLoad !== 'instantAsync') {
+      await new Promise(res => setTimeout(res, howToLoad === 'fastAsync' ? 0 : 500));
+    }
+    setData(getNewData(direction));
+  };
+  const isItemsLoaded = (index: number) => {
+    const ret = !(index < maxDataSize && (index === -1 || index === data.length));
+    return ret;
+  };
+  const itemCount = data.length + (data.length < maxDataSize ? 1 : 0);
+
+  const Row = ({index, style}: {index: number, style: CSSProperties}) => (
+    <div style={style}>{data[index]}</div>
+  );
+
+  useEffect(() => {
+    window.data = data;
+  }, [data]);
+
+  return <InfiniteScroll
+    data={data}
+    loadMoreItems={howToLoad === 'sync' ? loadMoreItemsSync : loadMoreItemsAsync}
+    isItemLoaded={isItemsLoaded}
+    itemCount={itemCount}
+    threshold={1}
+    outerRef={outerRef}
+    scrollOffset={40}
   >
     {({onItemsRendered}) => <FixedSizeList
       height={300}

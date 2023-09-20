@@ -1,5 +1,5 @@
 import {test, expect, ComponentFixtures} from '@playwright/experimental-ct-react17';
-import {StaticData1, StaticData2, SimpleDynamicData} from './Components';
+import {StaticData1, StaticData2, SimpleDynamicData, BiDirectDynamicData} from './Components';
 import React from 'react';
 
 test.use({viewport: {width: 1000, height: 1000}});
@@ -7,8 +7,20 @@ test.use({viewport: {width: 1000, height: 1000}});
 const scrollComponentToBottom = (component: Awaited<ReturnType<ComponentFixtures['mount']>>) => {
   return component.evaluate(element => {
     element.scrollTop = 100000;
+    return element.scrollTop;
   });
 };
+
+const scrollComponentToTop = (component: Awaited<ReturnType<ComponentFixtures['mount']>>) => {
+  return component.evaluate(element => {
+    element.scrollTop = 0;
+    return element.scrollTop;
+  });
+};
+
+const getData = (component: Awaited<ReturnType<ComponentFixtures['mount']>>) => (
+  component.evaluate(() => window.data)
+);
 
 test('With static data with initial data', async ({mount}) => {
   const component = await mount(<StaticData1 />);
@@ -276,4 +288,48 @@ test('Load more longer items asynchronously but slowly without initial data', as
 
   await expect(component).toContainText('14');
   await scrollComponentToBottom(component);
+});
+
+test('Load more items bidirectionally, asynchronously but fast without initial data', async ({mount}) => {
+  const component = await mount(<BiDirectDynamicData hasInitialData={false} howToLoad='fastAsync' />);
+  await expect(component).toContainText('0');
+  await expect(component).toContainText('1');
+  await expect(component).toContainText('2');
+  await expect(component).not.toContainText('-2');
+
+  await scrollComponentToBottom(component);
+  await expect(component).toContainText('10');
+  await expect(getData(component)).resolves.toContain('10');
+
+  await scrollComponentToBottom(component);
+  await expect(component).toContainText('11');
+  await expect(getData(component)).resolves.toContain('11');
+
+  await scrollComponentToBottom(component);
+  await expect(component).toContainText('12');
+  await expect(getData(component)).resolves.toContain('12');
+
+  await scrollComponentToBottom(component);
+  await expect(component).toContainText('13');
+  await expect(getData(component)).resolves.toContain('13');
+
+  await scrollComponentToBottom(component);
+  await expect(component).toContainText('14');
+  await expect(getData(component)).resolves.toContain('14');
+
+  await scrollComponentToTop(component);
+  await expect(component).toContainText('-1');
+  await expect(getData(component)).resolves.toContain('-1');
+
+  await scrollComponentToTop(component);
+  await expect(component).toContainText('-2');
+  await expect(getData(component)).resolves.toContain('-2');
+
+  await scrollComponentToTop(component);
+  await expect(component).toContainText('-3');
+  await expect(getData(component)).resolves.toContain('-3');
+
+  await scrollComponentToTop(component);
+  await expect(component).toContainText('-4');
+  await expect(getData(component)).resolves.toContain('-4');
 });
