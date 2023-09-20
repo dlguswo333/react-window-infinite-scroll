@@ -82,7 +82,7 @@ export const SimpleDynamicData = ({hasInitialData, howToLoad, longerData}: {hasI
   };
   const loadMoreItemsAsync = async () => {
     if (howToLoad !== 'instantAsync') {
-      await new Promise(res => setTimeout(res, howToLoad === 'fastAsync' ? 0 : 500));
+      await new Promise(res => setTimeout(res, howToLoad === 'fastAsync' ? 0 : 300));
     }
     setData(data.concat(data.length.toString()));
   };
