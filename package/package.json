@@ -1,51 +1,52 @@
 {
-    "name": "react-window-infinite-scroll",
-    "version": "0.0.3",
-    "description": "'react-window' infinite scroller (loader) that fetches data on data change.",
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/dlguswo333/react-window-infinite-scroll"
-    },
-    "main": "dist/index.cjs",
-    "module": "dist/index.mjs",
-    "type": "module",
-    "types": "dist/index.d.ts",
-    "files": [
-        "./dist"
-    ],
-    "scripts": {
-        "test": "echo \"Error: no test specified\" && exit 1",
-        "build": "rollup -c",
-        "watch": "rollup -cw",
-        "lint": "eslint src",
-        "prepack": "rm -rf dist/* && npm run build"
-    },
-    "keywords": [
-        "react",
-        "react-window",
-        "infinite",
-        "loader",
-        "scroll"
-    ],
-    "author": "dlguswo333 <dlguswo002@gmail.com>",
-    "license": "MIT",
-    "devDependencies": {
-        "@rollup/plugin-node-resolve": "^15.0.1",
-        "@types/react": "^17.0.52",
-        "@types/react-dom": "^17.0.18",
-        "@types/react-window": "^1.8.5",
-        "postcss": "^8.4.20",
-        "react": "^17.0.2",
-        "react-dom": "^17.0.2",
-        "react-window": "^1.8.9",
-        "rollup": "^3.8.1",
-        "rollup-plugin-postcss": "^4.0.2",
-        "rollup-plugin-typescript2": "^0.35.0",
-        "sass": "^1.57.1",
-        "typescript": "^5.1.6"
-    },
-    "peerDependencies": {
-        "react": ">=17.0.0",
-        "react-dom": ">=17.0.0"
-    }
+  "name": "react-window-infinite-scroll",
+  "version": "0.0.3",
+  "description": "'react-window' infinite scroller (loader) that fetches data on data change.",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/dlguswo333/react-window-infinite-scroll"
+  },
+  "main": "dist/index.cjs",
+  "module": "dist/index.mjs",
+  "type": "module",
+  "types": "dist/index.d.ts",
+  "files": [
+    "./dist"
+  ],
+  "scripts": {
+    "build": "rollup -c",
+    "watch": "rollup -cw",
+    "lint": "eslint src",
+    "prepack": "rm -rf dist/* && npm run build",
+    "test": "playwright test -c playwright-ct.config.ts"
+  },
+  "keywords": [
+    "react",
+    "react-window",
+    "infinite",
+    "loader",
+    "scroll"
+  ],
+  "author": "dlguswo333 <dlguswo002@gmail.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "@playwright/experimental-ct-react17": "^1.37.1",
+    "@rollup/plugin-node-resolve": "^15.0.1",
+    "@types/react": "^17.0.52",
+    "@types/react-dom": "^17.0.18",
+    "@types/react-window": "^1.8.5",
+    "postcss": "^8.4.20",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "react-window": "^1.8.9",
+    "rollup": "^3.8.1",
+    "rollup-plugin-postcss": "^4.0.2",
+    "rollup-plugin-typescript2": "^0.35.0",
+    "sass": "^1.57.1",
+    "typescript": "^5.1.6"
+  },
+  "peerDependencies": {
+    "react": ">=17.0.0",
+    "react-dom": ">=17.0.0"
+  }
 }

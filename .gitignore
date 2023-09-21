@@ -10,6 +10,11 @@ node_modules
 # editor
 /.vscode
 
+# playwright
+/package/test-results/
+/package/playwright-report/
+/package/playwright/.cache/
+
 # misc
 .DS_Store
 .env.local
