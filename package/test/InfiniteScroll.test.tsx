@@ -95,6 +95,9 @@ test('Load more longer items synchronously with initial data', async ({mount}) =
   await expect(component).toContainText('0');
   await expect(component).toContainText('1');
   await expect(component).toContainText('2');
+  await expect(component).toContainText('7');
+  await expect(component).toContainText('8');
+  await expect(component).toContainText('9');
 
   await expect(component).not.toContainText('14');
   await scrollComponentToBottom(component);
@@ -120,6 +123,9 @@ test('Load more longer items synchronously without initial data', async ({mount}
   await expect(component).toContainText('0');
   await expect(component).toContainText('1');
   await expect(component).toContainText('2');
+  await expect(component).toContainText('7');
+  await expect(component).toContainText('8');
+  await expect(component).toContainText('9');
 
   await expect(component).not.toContainText('14');
   await scrollComponentToBottom(component);
@@ -145,6 +151,9 @@ test('Load more longer items asynchronously but instantly with initial data', as
   await expect(component).toContainText('0');
   await expect(component).toContainText('1');
   await expect(component).toContainText('2');
+  await expect(component).toContainText('7');
+  await expect(component).toContainText('8');
+  await expect(component).toContainText('9');
 
   await expect(component).not.toContainText('14');
   await scrollComponentToBottom(component);
@@ -170,6 +179,9 @@ test('Load more longer items asynchronously but instantly without initial data',
   await expect(component).toContainText('0');
   await expect(component).toContainText('1');
   await expect(component).toContainText('2');
+  await expect(component).toContainText('7');
+  await expect(component).toContainText('8');
+  await expect(component).toContainText('9');
 
   await expect(component).not.toContainText('14');
   await scrollComponentToBottom(component);
@@ -195,6 +207,9 @@ test('Load more longer items asynchronously but fast with initial data', async (
   await expect(component).toContainText('0');
   await expect(component).toContainText('1');
   await expect(component).toContainText('2');
+  await expect(component).toContainText('7');
+  await expect(component).toContainText('8');
+  await expect(component).toContainText('9');
 
   await expect(component).not.toContainText('14');
   await scrollComponentToBottom(component);
@@ -220,6 +235,9 @@ test('Load more longer items asynchronously but fast without initial data', asyn
   await expect(component).toContainText('0');
   await expect(component).toContainText('1');
   await expect(component).toContainText('2');
+  await expect(component).toContainText('7');
+  await expect(component).toContainText('8');
+  await expect(component).toContainText('9');
 
   await expect(component).not.toContainText('14');
   await scrollComponentToBottom(component);
@@ -245,6 +263,9 @@ test('Load more longer items asynchronously but slowly with initial data', async
   await expect(component).toContainText('0');
   await expect(component).toContainText('1');
   await expect(component).toContainText('2');
+  await expect(component).toContainText('7');
+  await expect(component).toContainText('8');
+  await expect(component).toContainText('9');
 
   await expect(component).not.toContainText('14');
   await scrollComponentToBottom(component);
@@ -270,6 +291,9 @@ test('Load more longer items asynchronously but slowly without initial data', as
   await expect(component).toContainText('0');
   await expect(component).toContainText('1');
   await expect(component).toContainText('2');
+  await expect(component).toContainText('7');
+  await expect(component).toContainText('8');
+  await expect(component).toContainText('9');
 
   await expect(component).not.toContainText('14');
   await scrollComponentToBottom(component);
