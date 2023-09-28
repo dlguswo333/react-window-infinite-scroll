@@ -164,6 +164,13 @@ const loadMoreItems = async () => {
 ```
 
 # Changelog
+## v0.0.4
+- Improve `loadMoreItems` may not execute properly.
+  - Fix `loadMoreItems` may not work when it loads items synchronously.
+  - Fix `loadMoreItems` may not work if rerendering runs before the returned promise resolves.
+  - Fix items may not be loaded.
+- Add playwright test codes
+
 ## v0.0.3
 - Fix an error where `outerRef` has `null` or `undefined` value.
 
