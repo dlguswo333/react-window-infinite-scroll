@@ -164,6 +164,9 @@ const loadMoreItems = async () => {
 ```
 
 # Changelog
+## v0.0.5
+- Remove force rerendering code as it may fall into an infinite rerendering loop.
+
 ## v0.0.4
 - Improve `loadMoreItems` may not execute properly.
   - Fix `loadMoreItems` may not work when it loads items synchronously.
