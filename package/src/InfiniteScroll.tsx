@@ -1,4 +1,4 @@
-import {ReactNode, useCallback, useEffect, useLayoutEffect, useRef} from 'react';
+import {ReactNode, useCallback, useEffect, useLayoutEffect, useRef, useState} from 'react';
 import {ListOnItemsRenderedProps} from 'react-window';
 import {isPromise} from './util';
 
@@ -56,6 +56,9 @@ const InfiniteScroll = ({
   /** To prevent call loadMoreItems redundantly, in both `onItemsRendered` and on data change. */
   const pending = useRef<boolean>(false);
   const prevHeight = useRef<number | null>(null);
+  /** A dummy state to trigger rerender when promises by `loadMoreItems` resolves. */
+  const [dummyState, setDummyState] = useState(0);
+  const forceRerender = () => setDummyState(pre => pre + 1);
   /**
    * Prevent calling `loadMoreItems` frequently when loading items at the start.
    * However, do this only if enough items are loaded that
@@ -87,6 +90,7 @@ const InfiniteScroll = ({
       await ret;
     }
     pending.current = false;
+    forceRerender();
   }, [getOuterElement, loadMoreItems, scrollOffset]);
 
   const _onItemsRendered = useCallback<OnItemsRendered>((args) => {
@@ -122,7 +126,7 @@ const InfiniteScroll = ({
       // Scrolled to top.
       _loadMoreItems('start');
     }
-  }, [data, isItemLoaded, itemCount, scrollOffset, _loadMoreItems, getOuterElement]);
+  }, [data, dummyState, isItemLoaded, itemCount, scrollOffset, _loadMoreItems, getOuterElement]);
 
   // Scroll downward to prevent calling loadMoreItems infinitely.
   // Do not pass deps argument as the effect should run with ref value.
