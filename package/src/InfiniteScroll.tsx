@@ -90,7 +90,6 @@ const InfiniteScroll = ({
       await ret;
     }
     pending.current = false;
-    forceRerender();
   }, [getOuterElement, loadMoreItems, scrollOffset]);
 
   const _onItemsRendered = useCallback<OnItemsRendered>((args) => {
