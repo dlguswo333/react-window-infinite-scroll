@@ -1,4 +1,4 @@
-import {ReactNode, useCallback, useEffect, useLayoutEffect, useRef} from 'react';
+import {ReactNode, useCallback, useEffect, useLayoutEffect, useRef, useState} from 'react';
 import {ListOnItemsRenderedProps} from 'react-window';
 import {isPromise} from './util';
 
@@ -56,6 +56,11 @@ const InfiniteScroll = ({
   /** To prevent call loadMoreItems redundantly, in both `onItemsRendered` and on data change. */
   const pending = useRef<boolean>(false);
   const prevHeight = useRef<number | null>(null);
+  /** A dummy state to trigger rerender when promises by `loadMoreItems` resolves. */
+  const [dummyState, setDummyState] = useState(0);
+  const forceRerender = () => setDummyState(pre => pre + 1);
+  const prevData = useRef<typeof data>(data);
+  const [shouldCheckDataChange, setShouldCheckDataChange] = useState<boolean>(false);
   /**
    * Prevent calling `loadMoreItems` frequently when loading items at the start.
    * However, do this only if enough items are loaded that
@@ -85,6 +90,7 @@ const InfiniteScroll = ({
     const ret = loadMoreItems(direction);
     if (isPromise(ret)) {
       await ret;
+      setShouldCheckDataChange(true);
     }
     pending.current = false;
   }, [getOuterElement, loadMoreItems, scrollOffset]);
@@ -105,6 +111,22 @@ const InfiniteScroll = ({
     }
   }, [data.length, threshold, itemCount, isItemLoaded, _loadMoreItems, onItemsRendered]);
 
+  // Force rerender only if the data has just been changed.
+  // This is to prevent the following bugs.
+  // - loadMoreItems function does not run even if it needs to.
+  // - Force rerender logics cause an infinite rerender loop.
+  // https://github.com/dlguswo333/react-window-infinite-scroll/issues/21
+  useEffect(() => {
+    if (!shouldCheckDataChange) {
+      return;
+    }
+    setShouldCheckDataChange(false);
+    if (prevData.current !== data) {
+      prevData.current = data;
+      forceRerender();
+    }
+  }, [data, shouldCheckDataChange]);
+
   // Call loadMoreItems when data changes to fetch data enough to fill the screen
   // without user having to scroll to induce onItemsRendered callback.
   useEffect(() => {
@@ -122,7 +144,7 @@ const InfiniteScroll = ({
       // Scrolled to top.
       _loadMoreItems('start');
     }
-  }, [data, isItemLoaded, itemCount, scrollOffset, _loadMoreItems, getOuterElement]);
+  }, [data, dummyState, isItemLoaded, itemCount, scrollOffset, _loadMoreItems, getOuterElement]);
 
   // Scroll downward to prevent calling loadMoreItems infinitely.
   // Do not pass deps argument as the effect should run with ref value.
