@@ -184,3 +184,66 @@ export const BiDirectDynamicData = ({hasInitialData, howToLoad}: {hasInitialData
     </FixedSizeList>}
   </InfiniteScroll>;
 };
+
+/**
+ * Loading data fails for the first period.
+ * This is to test infinite rerender bug.
+ * https://github.com/dlguswo333/react-window-infinite-scroll/issues/21
+ */
+export const SomeFailDynamicData = ({hasInitialData, howToLoad}: {hasInitialData: boolean; howToLoad: 'sync' | 'async';}) => {
+  const maxDataSize = 100;
+  const [data, setData] = useState<string[]>(hasInitialData ? ['0'] : []);
+  const outerRef = useRef<HTMLElement>(null);
+  const loadMoreItemsSync = () => {
+    if (!shouldUpdateData) {
+      return;
+    }
+    setData(data.concat(data.length.toString()));
+  };
+  const [shouldUpdateData, setShouldUpdateData] = useState(false);
+  const loadMoreItemsAsync = async () => {
+    if (!shouldUpdateData) {
+      return;
+    }
+    setData(data.concat(data.length.toString()));
+  };
+
+  useEffect(() => {
+    (async () => {
+      await new Promise((res) => setTimeout(res, 500));
+      setShouldUpdateData(true);
+    })();
+  }, []);
+
+  const isItemsLoaded = (index: number) => {
+    const ret = !(index === data.length && index < maxDataSize);
+    return ret;
+  };
+  const itemCount = data.length + (data.length < maxDataSize ? 1 : 0);
+
+  const Row = ({index, style}: {index: number, style: CSSProperties}) => (
+    <div style={style}>{data[index]}</div>
+  );
+
+  return <InfiniteScroll
+    data={data}
+    loadMoreItems={howToLoad === 'sync' ? loadMoreItemsSync : loadMoreItemsAsync}
+    isItemLoaded={isItemsLoaded}
+    itemCount={itemCount}
+    threshold={1}
+    outerRef={outerRef}
+    scrollOffset={30}
+  >
+    {({onItemsRendered}) => <FixedSizeList
+      height={300}
+      itemCount={itemCount}
+      width='100%'
+      onItemsRendered={onItemsRendered}
+      itemSize={30}
+      outerRef={outerRef}
+      className='Outer'
+    >
+      {Row}
+    </FixedSizeList>}
+  </InfiniteScroll>;
+};
