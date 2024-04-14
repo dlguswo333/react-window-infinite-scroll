@@ -1,5 +1,5 @@
 # Dockerfile to run test
-FROM mcr.microsoft.com/playwright:v1.38.0-jammy
+FROM mcr.microsoft.com/playwright:v1.43.1-jammy
 
 WORKDIR /app
 
