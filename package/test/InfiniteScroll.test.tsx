@@ -1,5 +1,5 @@
 import {test, expect, ComponentFixtures} from '@playwright/experimental-ct-react17';
-import {StaticData1, StaticData2, SimpleDynamicData, BiDirectDynamicData} from './Components';
+import {StaticData1, StaticData2, SimpleDynamicData, BiDirectDynamicData, SomeFailDynamicData} from './Components';
 import React from 'react';
 
 test.use({viewport: {width: 1000, height: 1000}});
@@ -356,4 +356,52 @@ test('Load more items bidirectionally, asynchronously but fast without initial d
   await scrollComponentToTop(component);
   await expect(component).toContainText('-4');
   await expect(getData(component)).resolves.toContain('-4');
+});
+
+test('Loading data synchronously, but fails for the first period without initial data', async ({mount}) => {
+  const component = await mount(<SomeFailDynamicData hasInitialData={false} howToLoad='sync' />);
+  await expect(component).toContainText('0');
+  await expect(component).toContainText('1');
+  await expect(component).toContainText('2');
+
+  for (let value = 10; value <= 20;++value) {
+    await scrollComponentToBottom(component);
+    await expect(component).toContainText(value.toString());
+  }
+});
+
+test('Loading data asynchronously, but fails for the first period without initial data', async ({mount}) => {
+  const component = await mount(<SomeFailDynamicData hasInitialData={false} howToLoad='async' />);
+  await expect(component).toContainText('0');
+  await expect(component).toContainText('1');
+  await expect(component).toContainText('2');
+
+  for (let value = 10; value <= 20;++value) {
+    await scrollComponentToBottom(component);
+    await expect(component).toContainText(value.toString());
+  }
+});
+
+test('Loading data synchronously, but fails for the first period with initial data', async ({mount}) => {
+  const component = await mount(<SomeFailDynamicData hasInitialData={true} howToLoad='sync' />);
+  await expect(component).toContainText('0');
+  await expect(component).toContainText('1');
+  await expect(component).toContainText('2');
+
+  for (let value = 10; value <= 20;++value) {
+    await scrollComponentToBottom(component);
+    await expect(component).toContainText(value.toString());
+  }
+});
+
+test('Loading data asynchronously, but fails for the first period with initial data', async ({mount}) => {
+  const component = await mount(<SomeFailDynamicData hasInitialData={true} howToLoad='async' />);
+  await expect(component).toContainText('0');
+  await expect(component).toContainText('1');
+  await expect(component).toContainText('2');
+
+  for (let value = 10; value <= 20;++value) {
+    await scrollComponentToBottom(component);
+    await expect(component).toContainText(value.toString());
+  }
 });

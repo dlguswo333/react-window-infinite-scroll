@@ -194,5 +194,14 @@ npm run deploy
 Do not run `npm publish` in root directory or it might publish monorepo project.
 We have `private:true` in root package.json to prevent the situation.
 
+## Test
+`test.Dockerfile` builds an docker image for test.
+The dockerfile will run the test cases while building. You don't need the output image.
+The recommended shell command to test with docker is the following:
+
+```shell
+docker build --output type=tar,dest=/dev/null -f ./package/test.Dockerfile --network host ./package
+```
+
 [react-window]: https://github.com/bvaughn/react-window
 [new-jsx-transform]: https://legacy.reactjs.org/blog/2020/09/22/introducing-the-new-jsx-transform.html
