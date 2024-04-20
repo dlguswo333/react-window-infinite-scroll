@@ -164,6 +164,9 @@ const loadMoreItems = async () => {
 ```
 
 # Changelog
+## v0.0.7
+- Update dependencies
+
 ## v0.0.6
 - Revert deleted force rerendering code (Refer to v0.0.5).
 - Force rerender only if the data has been changed.

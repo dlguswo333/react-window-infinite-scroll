@@ -1,6 +1,6 @@
 {
   "name": "react-window-infinite-scroll",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "'react-window' infinite scroller (loader) that fetches data on data change.",
   "repository": {
     "type": "git",
