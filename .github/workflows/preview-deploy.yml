@@ -5,7 +5,6 @@ on:
   # Runs on pushes targeting the default branch and preview folder
   push:
     branches: ["main"]
-    paths: ["preview"]
 
   # Allows you to run this workflow manually from the Actions tab
   # This event will only trigger a workflow run if the workflow file is on the default branch.
