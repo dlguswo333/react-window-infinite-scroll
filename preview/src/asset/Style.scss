@@ -1,5 +1,8 @@
 $big-screen: 800px;
 
+:root {
+    font-size: 17px;
+}
 * {
     box-sizing: border-box;
 }
@@ -17,7 +20,24 @@ $big-screen: 800px;
         flex-direction: row;
         align-items: flex-start;
     }
+    & > div {
+        flex: 1;
+    }
     .Outer {
         border: 1px solid gray;
+    }
+}
+.Preview-Config {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 20px;
+    select {
+        min-width: 50px;
+        font-size: 0.9rem;
+    }
+    code {
+        background-color: #f0f0f0;
+        padding: 3px;
+        border-radius: 2px;
     }
 }

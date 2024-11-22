@@ -1,13 +1,25 @@
 import InfiniteScroll from 'react-window-infinite-scroll';
 import useReactWindow from './useReactWindow';
 import {FixedSizeList} from 'react-window';
-import {CSSProperties, useRef} from 'react';
+import {CSSProperties, useRef, useState} from 'react';
+import Config, {Configs} from './Config';
 
 type Props = {
   type: Parameters<typeof useReactWindow>[0]
 }
 
+const defaultValues = {
+  numItemsToLoadAtOnce: 1,
+  threshold: 30,
+  scrollOffset: 30,
+  infiniteScrollDirection: 'end',
+} as const;
+
 const Preview = ({type}: Props) => {
+  const [numItemsToLoadAtOnce, setNumItemsToLoadAtOnce] = useState<Configs['NumItemsToLoadAtOnce']>(defaultValues.numItemsToLoadAtOnce);
+  const [threshold, setThreshold] = useState<Configs['Threshold']>(defaultValues.threshold);
+  const [scrollOffset, setScrollOffset] = useState<Configs['ScrollOffset']>(defaultValues.scrollOffset);
+  const [infiniteScrollDirection, setInfiniteScrollDirection] = useState<Configs['InfiniteScrollDirection']>(defaultValues.infiniteScrollDirection);
   const {data, loadMoreItems, isItemsLoaded, itemCount} = useReactWindow(type);
   const outerRef = useRef<HTMLElement>(null);
 
@@ -15,15 +27,25 @@ const Preview = ({type}: Props) => {
     <div style={style}>{data[index]}</div>
   );
 
-  return <>
+  return <div>
+    <Config
+      numItemsToLoadAtOnce={numItemsToLoadAtOnce}
+      threshold={threshold}
+      scrollOffset={scrollOffset}
+      infiniteScrollDirection={infiniteScrollDirection}
+      setNumItemsToLoadAtOnce={setNumItemsToLoadAtOnce}
+      setThreshold={setThreshold}
+      setScrollOffset={setScrollOffset}
+      setInfiniteScrollDirection={setInfiniteScrollDirection}
+    />
     <InfiniteScroll
       data={data}
       loadMoreItems={loadMoreItems}
       isItemLoaded={isItemsLoaded}
       itemCount={itemCount}
-      threshold={1}
+      threshold={threshold}
       outerRef={outerRef}
-      scrollOffset={30}
+      scrollOffset={scrollOffset}
     >
       {({onItemsRendered}) => <FixedSizeList
         height={300}
@@ -37,7 +59,7 @@ const Preview = ({type}: Props) => {
         {Row}
       </FixedSizeList>}
     </InfiniteScroll>
-  </>;
+  </div>;
 };
 
 export default Preview;
