@@ -4,10 +4,6 @@ import {FixedSizeList} from 'react-window';
 import {CSSProperties, useRef, useState} from 'react';
 import Config, {Configs} from './Config';
 
-type Props = {
-  type: Parameters<typeof useReactWindow>[0]
-}
-
 const defaultValues = {
   numItemsToLoadAtOnce: 1,
   threshold: 1,
@@ -15,12 +11,12 @@ const defaultValues = {
   infiniteScrollDirection: 'end',
 } as const;
 
-const Preview = ({type}: Props) => {
+const Preview = () => {
   const [numItemsToLoadAtOnce, setNumItemsToLoadAtOnce] = useState<Configs['NumItemsToLoadAtOnce']>(defaultValues.numItemsToLoadAtOnce);
   const [threshold, setThreshold] = useState<Configs['Threshold']>(defaultValues.threshold);
   const [scrollOffset, setScrollOffset] = useState<Configs['ScrollOffset']>(defaultValues.scrollOffset);
   const [infiniteScrollDirection, setInfiniteScrollDirection] = useState<Configs['InfiniteScrollDirection']>(defaultValues.infiniteScrollDirection);
-  const {data, loadMoreItems, isItemsLoaded, itemCount} = useReactWindow(type);
+  const {data, loadMoreItems, isItemsLoaded, itemCount} = useReactWindow({numItemsToLoadAtOnce, infiniteScrollDirection});
   const outerRef = useRef<HTMLElement>(null);
 
   const Row = ({index, style}: {index: number, style: CSSProperties}) => (
