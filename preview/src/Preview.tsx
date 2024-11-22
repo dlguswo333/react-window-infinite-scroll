@@ -10,7 +10,7 @@ type Props = {
 
 const defaultValues = {
   numItemsToLoadAtOnce: 1,
-  threshold: 30,
+  threshold: 1,
   scrollOffset: 30,
   infiniteScrollDirection: 'end',
 } as const;
