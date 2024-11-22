@@ -15,6 +15,7 @@ const useReactWindow = ({
   infiniteScrollDirection,
 }: Props) => {
   const [data, setData] = useState<string[]>(() => ['data 0']);
+  const resetData = useCallback(() => setData(['data 0']), []);
   const isFetching = useRef<boolean>(false);
   const itemCount = useMemo(() => data.length + (data.length < MAX_LENGTH ? 1 : 0), [data.length]);
 
@@ -60,7 +61,7 @@ const useReactWindow = ({
   }, [data.length, infiniteScrollDirection]);
 
   return {
-    data, loadMoreItems, isItemsLoaded, itemCount,
+    data, loadMoreItems, isItemsLoaded, itemCount, resetData,
   };
 };
 

@@ -16,6 +16,7 @@ $big-screen: 800px;
     flex-direction: column;
     align-items: center;
     justify-content: flex-start;
+    gap: 6px;
     @media (min-width: $big-screen) {
         flex-direction: row;
         align-items: flex-start;
@@ -31,8 +32,13 @@ $big-screen: 800px;
     display: flex;
     flex-direction: column;
     margin-bottom: 20px;
-    select {
-        min-width: 50px;
+    h3 {
+        margin-top: 16px;
+        margin-bottom: 6px;
+    }
+    input, select {
+        min-width: 80px;
+        field-sizing: content;
         font-size: 0.9rem;
     }
     code {

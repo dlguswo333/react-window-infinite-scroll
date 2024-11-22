@@ -15,6 +15,7 @@ type Props = {
   setThreshold: SetState<Configs['Threshold']>,
   setScrollOffset: SetState<Configs['ScrollOffset']>,
   setInfiniteScrollDirection: SetState<Configs['InfiniteScrollDirection']>,
+  resetData: () => void;
 }
 
 const Config = ({
@@ -26,6 +27,7 @@ const Config = ({
   setThreshold,
   setScrollOffset,
   setInfiniteScrollDirection,
+  resetData,
 }: Props) => {
   return <div className='Preview-Config'>
     <div>
@@ -46,7 +48,7 @@ const Config = ({
     </div>
     <div>
       <h3>threshold: <code>{threshold}</code></h3>
-      <input defaultValue={threshold} onChange={(e) => {
+      <input type='number' defaultValue={threshold} onChange={(e) => {
         const value = Number(e.target.value);
         if (Number.isInteger(value) && 0 <= value && value <= 5) {
           setThreshold(value);
@@ -71,12 +73,16 @@ const Config = ({
     </div>
     <div>
       <h3>Scroll Offset: <code>{scrollOffset}</code></h3>
-      <input defaultValue={scrollOffset} onChange={(e) => {
+      <input type='number' defaultValue={scrollOffset} onChange={(e) => {
         const value = Number(e.target.value);
         if (Number.isInteger(value) && 0 <= value && value <= 30) {
           setScrollOffset(value);
         }
       }} />
+    </div>
+    <div>
+      <h3>Reset Data</h3>
+      <button onClick={resetData}>reset</button>
     </div>
   </div>;
 };

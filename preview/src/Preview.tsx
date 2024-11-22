@@ -16,7 +16,7 @@ const Preview = () => {
   const [threshold, setThreshold] = useState<Configs['Threshold']>(defaultValues.threshold);
   const [scrollOffset, setScrollOffset] = useState<Configs['ScrollOffset']>(defaultValues.scrollOffset);
   const [infiniteScrollDirection, setInfiniteScrollDirection] = useState<Configs['InfiniteScrollDirection']>(defaultValues.infiniteScrollDirection);
-  const {data, loadMoreItems, isItemsLoaded, itemCount} = useReactWindow({numItemsToLoadAtOnce, infiniteScrollDirection});
+  const {data, loadMoreItems, isItemsLoaded, itemCount, resetData} = useReactWindow({numItemsToLoadAtOnce, infiniteScrollDirection});
   const outerRef = useRef<HTMLElement>(null);
 
   const Row = ({index, style}: {index: number, style: CSSProperties}) => (
@@ -33,6 +33,7 @@ const Preview = () => {
       setThreshold={setThreshold}
       setScrollOffset={setScrollOffset}
       setInfiniteScrollDirection={setInfiniteScrollDirection}
+      resetData={resetData}
     />
     <InfiniteScroll
       data={data}
