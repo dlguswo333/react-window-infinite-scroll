@@ -10,6 +10,25 @@ $big-screen: 800px;
     @media (max-width: $big-screen) {
         text-align: center;
     }
+    h1 {
+        display: inline-block;
+        margin-right: 20px;
+    }
+    .Icons {
+        display: inline-block;
+        & > * {
+            margin-right: 10px;
+        }
+        .IconLink {
+          display: inline-block;
+          width: 26px;
+          height: 26px;
+          img {
+            width: 100%;
+            height: 100%;
+          }
+        }
+    }
 }
 .Preview-Main {
     display: flex;
