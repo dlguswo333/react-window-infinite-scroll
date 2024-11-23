@@ -23,7 +23,6 @@ const App = () => {
     <main className='Preview-Main'>
       <Preview />
       <Preview />
-      <Preview />
     </main>
   </>;
 };
