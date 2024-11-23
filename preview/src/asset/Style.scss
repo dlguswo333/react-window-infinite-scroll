@@ -1,5 +1,8 @@
 $big-screen: 800px;
 
+:root {
+    font-size: 17px;
+}
 * {
     box-sizing: border-box;
 }
@@ -7,17 +10,66 @@ $big-screen: 800px;
     @media (max-width: $big-screen) {
         text-align: center;
     }
+    h1 {
+        display: inline-block;
+        margin-top: 8px;
+        margin-right: 14px;
+    }
+    .Icons {
+        display: inline-block;
+        & > * {
+            margin-right: 10px;
+        }
+        .IconLink {
+          display: inline-block;
+          width: 26px;
+          height: 26px;
+          @media (hover: hover) and (pointer: fine) {
+              &:hover {
+                  filter: brightness(2.5);
+              }
+          }
+          img {
+            width: 100%;
+            height: 100%;
+          }
+        }
+    }
 }
 .Preview-Main {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: flex-start;
+    gap: 6px;
     @media (min-width: $big-screen) {
         flex-direction: row;
         align-items: flex-start;
     }
+    & > div {
+        flex: 1;
+    }
     .Outer {
         border: 1px solid gray;
+    }
+}
+.Preview-Config {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 20px;
+    h3 {
+        margin-top: 16px;
+        margin-bottom: 6px;
+    }
+    input, select {
+        min-width: 80px;
+        field-sizing: content;
+        font-size: 0.9rem;
+        margin-right: 10px;
+    }
+    code {
+        background-color: #f0f0f0;
+        padding: 3px;
+        border-radius: 2px;
     }
 }

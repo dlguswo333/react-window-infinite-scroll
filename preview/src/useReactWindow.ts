@@ -1,20 +1,21 @@
 import {useCallback, useMemo, useRef, useState} from 'react';
 import {sleep} from './util';
+import {Configs} from './Config';
 
 const MAX_LENGTH = 500;
 const SLEEP_MS = 100;
 
-const useReactWindow = (type: 1 | 2 | 3) => {
-  const [data, setData] = useState<string[]>(() => {
-    switch (type) {
-    case 1:
-      return [];
-    case 2:
-      return ['data 150'];
-    case 3:
-      return ['data 500'];
-    }
-  });
+type Props = {
+  numItemsToLoadAtOnce: Configs['NumItemsToLoadAtOnce'];
+  infiniteScrollDirection: Configs['InfiniteScrollDirection'],
+}
+
+const useReactWindow = ({
+  numItemsToLoadAtOnce,
+  infiniteScrollDirection,
+}: Props) => {
+  const [data, setData] = useState<string[]>(() => ['data 0']);
+  const resetData = useCallback(() => setData(['data 0']), []);
   const isFetching = useRef<boolean>(false);
   const itemCount = useMemo(() => data.length + (data.length < MAX_LENGTH ? 1 : 0), [data.length]);
 
@@ -27,64 +28,40 @@ const useReactWindow = (type: 1 | 2 | 3) => {
       return;
     }
     isFetching.current = true;
-    switch (type) {
-    case 1: {
-      const newValue = `data ${data.length}`;
-      await sleep(SLEEP_MS);
-      setData(data => {
-        if (data.length >= MAX_LENGTH) {
+    const getNewItems = () => {
+      if (data.length >= MAX_LENGTH) {
         // This must not be reached.
-          throw Error(`data length exceeds MAX_LENGTH:${MAX_LENGTH}`);
-        }
-        return data.concat([newValue]);
-      });
-      isFetching.current = false;
-      break;
-    }
-    case 2: {
-      const newValue = direction === 'end' ?
-        `data ${Number(/(-?\d+)/.exec(data[data.length - 1])![1]) + 1}` :
-        `data ${Number(/(-?\d+)/.exec(data[0])![1]) - 1}`;
-      await sleep(SLEEP_MS);
-      setData(data => {
-        if (data.length >= MAX_LENGTH) {
-        // This must not be reached.
-          throw Error(`data length exceeds MAX_LENGTH:${MAX_LENGTH}`);
-        }
-        return direction === 'end' ? [...data, newValue] : [newValue, ...data];
-      });
-      isFetching.current = false;
-      break;
-    }
-    case 3: {
-      const newValue = `data ${Number(/(-?\d+)/.exec(data[0])![1]) - 1}`;
-      await sleep(SLEEP_MS);
-      setData(data => {
-        if (data.length >= MAX_LENGTH) {
-        // This must not be reached.
-          throw Error(`data length exceeds MAX_LENGTH:${MAX_LENGTH}`);
-        }
-        return [newValue, ...data];
-      });
-      isFetching.current = false;
-      break;
-    }
-    }
-  }, [data, type]);
+        throw Error(`data length exceeds MAX_LENGTH:${MAX_LENGTH}`);
+      }
+      const newItems = [];
+      const start = direction === 'end'
+        ? Number(/(-?\d+)/.exec(data[data.length - 1])![1]) + 1 
+        : Number(/(-?\d+)/.exec(data[0])![1]) - numItemsToLoadAtOnce;
+      for (let i = 0;i < numItemsToLoadAtOnce;++i) {
+        newItems.push(`data ${start + i}`);
+      }
+      return direction === 'end' 
+        ? [...data, ...newItems]
+        : [...newItems, ...data];
+    };
+    await sleep(SLEEP_MS);
+    setData(getNewItems());
+    isFetching.current = false;
+  }, [data, numItemsToLoadAtOnce]);
 
   const isItemsLoaded = useCallback((index: number) => {
-    switch (type) {
-    case 1:
-      return index >= MAX_LENGTH || index < data.length;
-    case 2:
+    switch (infiniteScrollDirection) {
+    case 'end':
+      return data.length >= MAX_LENGTH || index < 0;
+    case 'both':
       return data.length >= MAX_LENGTH;
-    case 3:
+    case 'start':
       return data.length >= MAX_LENGTH || index >= 0;
     }
-  }, [data.length, type]);
+  }, [data.length, infiniteScrollDirection]);
 
   return {
-    data, loadMoreItems, isItemsLoaded, itemCount,
+    data, loadMoreItems, isItemsLoaded, itemCount, resetData,
   };
 };
 
