@@ -54,6 +54,7 @@ const Config = ({
           setThreshold(value);
         }
       }} />
+      (<code>0</code> ~ <code>5</code>)
     </div>
     <div>
       <h3>Infinite Scroll Direction: <code>{infiniteScrollDirection}</code></h3>
@@ -79,6 +80,7 @@ const Config = ({
           setScrollOffset(value);
         }
       }} />
+      (<code>0</code> ~ <code>30</code>)
     </div>
     <div>
       <h3>Reset Data</h3>
