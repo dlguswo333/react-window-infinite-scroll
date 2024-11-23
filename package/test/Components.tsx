@@ -12,7 +12,7 @@ declare global {
 }
 
 export const StaticData1 = () => {
-  const data = ['0'];
+  const data = ['<0>'];
   const outerRef = useRef<HTMLElement>(null);
   const loadMoreItems = () => new Promise(res => res(undefined));
   const isItemsLoaded = () => true;
@@ -45,7 +45,7 @@ export const StaticData1 = () => {
 };
 
 export const StaticData2 = () => {
-  const data = ['0', '1', '2'];
+  const data = ['<0>', '<1>', '<2>'];
   const outerRef = useRef<HTMLElement>(null);
   const loadMoreItems = () => new Promise(res => res(undefined));
   const isItemsLoaded = () => true;
@@ -83,16 +83,16 @@ export const StaticData2 = () => {
  */
 export const SimpleDynamicData = ({hasInitialData, howToLoad, longerData}: {hasInitialData: boolean; howToLoad: 'sync' | 'instantAsync' | 'fastAsync' | 'slowAsync', longerData: boolean;}) => {
   const maxDataSize = longerData ? 100 : 3;
-  const [data, setData] = useState<string[]>(hasInitialData ? ['0'] : []);
+  const [data, setData] = useState<string[]>(hasInitialData ? ['<0>'] : []);
   const outerRef = useRef<HTMLElement>(null);
   const loadMoreItemsSync = () => {
-    setData(data.concat(data.length.toString()));
+    setData(data.concat(`<${data.length.toString()}>`));
   };
   const loadMoreItemsAsync = async () => {
     if (howToLoad !== 'instantAsync') {
       await new Promise(res => setTimeout(res, howToLoad === 'fastAsync' ? 0 : 300));
     }
-    setData(data.concat(data.length.toString()));
+    setData(data.concat(`<${data.length.toString()}>`));
   };
   const isItemsLoaded = (index: number) => {
     const ret = !(index === data.length && index < maxDataSize);
@@ -132,12 +132,12 @@ export const SimpleDynamicData = ({hasInitialData, howToLoad, longerData}: {hasI
  */
 export const BiDirectDynamicData = ({hasInitialData, howToLoad}: {hasInitialData: boolean; howToLoad: 'sync' | 'instantAsync' | 'fastAsync' | 'slowAsync'}) => {
   const maxDataSize = 100;
-  const [data, setData] = useState<string[]>(hasInitialData ? ['0'] : []);
+  const [data, setData] = useState<string[]>(hasInitialData ? ['<0>'] : []);
   const outerRef = useRef<HTMLElement>(null);
   const getNewData = (direction: 'start' | 'end') => (
     direction === 'start' ?
-      [`${Number(data[0]) - 1}`, ...data] :
-      [...data, data.length === 0 ? '0' : `${Number(data[data.length - 1]) + 1}`]
+      [`<${Number(data[0].replace(/[<>]/g, '')) - 1}>`, ...data] :
+      [...data, data.length === 0 ? '<0>' : `<${Number(data[data.length - 1].replace(/[<>]/g, '')) + 1}>`]
   );
   const loadMoreItemsSync = (direction: 'start' | 'end') => {
     setData(getNewData(direction));
@@ -192,20 +192,20 @@ export const BiDirectDynamicData = ({hasInitialData, howToLoad}: {hasInitialData
  */
 export const SomeFailDynamicData = ({hasInitialData, howToLoad}: {hasInitialData: boolean; howToLoad: 'sync' | 'async';}) => {
   const maxDataSize = 100;
-  const [data, setData] = useState<string[]>(hasInitialData ? ['0'] : []);
+  const [data, setData] = useState<string[]>(hasInitialData ? ['<0>'] : []);
   const outerRef = useRef<HTMLElement>(null);
   const loadMoreItemsSync = () => {
     if (!shouldUpdateData) {
       return;
     }
-    setData(data.concat(data.length.toString()));
+    setData(data.concat(`<${data.length.toString()}>`));
   };
   const [shouldUpdateData, setShouldUpdateData] = useState(false);
   const loadMoreItemsAsync = async () => {
     if (!shouldUpdateData) {
       return;
     }
-    setData(data.concat(data.length.toString()));
+    setData(data.concat(`<${data.length.toString()}>`));
   };
 
   useEffect(() => {
