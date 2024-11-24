@@ -102,10 +102,16 @@ const InfiniteScroll = ({
       // All items are loaded and visible.
       return;
     }
-    if (visibleStopIndex >= data.length - threshold && !isItemLoaded(data.length)) {
+    if (
+      visibleStopIndex >= data.length - threshold &&
+      !isItemLoaded(data.length)
+    ) {
       // Last 'threshold' items are visible.
       _loadMoreItems('end');
-    } else if (visibleStartIndex <= threshold - 1 && !isItemLoaded(-1)) {
+    } else if (
+      (visibleStartIndex <= threshold - 1 || visibleStartIndex === 0) &&
+      !isItemLoaded(-1)
+    ) {
       // First 'threshold' items are visible.
       _loadMoreItems('start');
     }
