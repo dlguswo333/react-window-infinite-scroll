@@ -164,6 +164,10 @@ const loadMoreItems = async () => {
 ```
 
 # Changelog
+## v0.0.8
+- Update dependencies
+- Fix infinite loading not work on 'start' direction when `threshold` is `0`.
+
 ## v0.0.7
 - Update dependencies
 
