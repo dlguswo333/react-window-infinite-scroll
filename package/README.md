@@ -33,7 +33,7 @@ type Props = {
   /**
    * Threshold value to load more items on items rendered.
    * When 1st ~ *threshold*th first item at either end is visible, `loadMoreItems` will be called.
-   * Setting the value `0` or smaller may disable calling `loadMoreItems` on items rendered.
+   * Setting the value `0` or smaller might disable calling `loadMoreItems` on items rendered.
    */
   threshold: number;
   /**
