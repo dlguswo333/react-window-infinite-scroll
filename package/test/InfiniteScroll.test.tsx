@@ -1,5 +1,5 @@
 import {test, expect, ComponentFixtures} from '@playwright/experimental-ct-react17';
-import {StaticData1, StaticData2, SimpleDynamicData, BiDirectDynamicData, SomeFailDynamicData} from './Components';
+import {StaticData1, StaticData2, SimpleDynamicData, BiDirectDynamicData, SomeFailDynamicData, ThresholdZeroBiDirectDynamicData} from './Components';
 import React from 'react';
 
 test.use({viewport: {width: 1000, height: 1000}});
@@ -404,4 +404,48 @@ test('Loading data asynchronously, but fails for the first period with initial d
     await scrollComponentToBottom(component);
     await expect(component).toContainText(value.toString());
   }
+});
+
+test('Loading data asynchronously, but zero threshold and positive scrollOffset', async ({mount}) => {
+  const component = await mount(<ThresholdZeroBiDirectDynamicData />);
+  await expect(component).toContainText('<0>');
+  await expect(component).toContainText('<1>');
+  await expect(component).toContainText('<2>');
+  await expect(component).not.toContainText('<-2>');
+
+  await scrollComponentToBottom(component);
+  await expect(component).toContainText('<10>');
+  await expect(getData(component)).resolves.toContain('<10>');
+
+  await scrollComponentToBottom(component);
+  await expect(component).toContainText('<11>');
+  await expect(getData(component)).resolves.toContain('<11>');
+
+  await scrollComponentToBottom(component);
+  await expect(component).toContainText('<12>');
+  await expect(getData(component)).resolves.toContain('<12>');
+
+  await scrollComponentToBottom(component);
+  await expect(component).toContainText('<13>');
+  await expect(getData(component)).resolves.toContain('<13>');
+
+  await scrollComponentToBottom(component);
+  await expect(component).toContainText('<14>');
+  await expect(getData(component)).resolves.toContain('<14>');
+
+  await scrollComponentToTop(component);
+  await expect(component).toContainText('<-1>');
+  await expect(getData(component)).resolves.toContain('<-1>');
+
+  await scrollComponentToTop(component);
+  await expect(component).toContainText('<-2>');
+  await expect(getData(component)).resolves.toContain('<-2>');
+
+  await scrollComponentToTop(component);
+  await expect(component).toContainText('<-3>');
+  await expect(getData(component)).resolves.toContain('<-3>');
+
+  await scrollComponentToTop(component);
+  await expect(component).toContainText('<-4>');
+  await expect(getData(component)).resolves.toContain('<-4>');
 });
