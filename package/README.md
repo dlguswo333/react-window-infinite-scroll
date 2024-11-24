@@ -199,11 +199,11 @@ We have `private:true` in root package.json to prevent the situation.
 
 ## Test
 `test.Dockerfile` builds an docker image for test.
-The dockerfile will run the test cases while building. You don't need the output image.
+The Dockerfile will run the test cases while building the image. You don't need the output image.
 The recommended shell command to test with docker is the following:
 
 ```shell
-docker build --output type=tar,dest=/dev/null -f ./package/test.Dockerfile --network host ./package
+docker build --output type=tar,dest=/dev/null -f ./package/test.Dockerfile --network host .
 ```
 
 [react-window]: https://github.com/bvaughn/react-window

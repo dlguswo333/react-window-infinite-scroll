@@ -30,7 +30,7 @@
   "author": "dlguswo333 <dlguswo002@gmail.com>",
   "license": "MIT",
   "devDependencies": {
-    "@playwright/experimental-ct-react17": "1.43.1",
+    "@playwright/experimental-ct-react17": "1.44.1",
     "@rollup/plugin-node-resolve": "^15.2.1",
     "@types/react": "^17.0.75",
     "@types/react-dom": "^17.0.25",
