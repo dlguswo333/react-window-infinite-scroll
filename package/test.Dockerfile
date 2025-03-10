@@ -1,6 +1,6 @@
 # Dockerfile to run test
 # Run this Dockerfile at the monorepo root.
-FROM mcr.microsoft.com/playwright:v1.44.1-jammy
+FROM mcr.microsoft.com/playwright:v1.51.0-noble
 
 WORKDIR /app
 
