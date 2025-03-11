@@ -1,6 +1,6 @@
 import {ReactNode, useCallback, useEffect, useLayoutEffect, useRef, useState} from 'react';
 import {ListOnItemsRenderedProps} from 'react-window';
-import {isPromise} from './util';
+import {getElementData, isPromise} from './util';
 
 type OnItemsRendered = (props: ListOnItemsRenderedProps) => unknown;
 type Direction = 'start' | 'end';
@@ -28,7 +28,7 @@ type Props = {
   threshold: number;
   /**
    * offset value (in `px`) for smooth infinite scrolling.
-   * Recommends value equal to minimum height of items or higher.
+   * Recommends value equal to minimum length of items or higher.
   */
   scrollOffset: number;
   /** children that receives `onItemsRendered` props and returns `ReactNode`. */
@@ -54,10 +54,11 @@ const InfiniteScroll = ({
   children,
   outerRef,
   data,
+  layout = 'vertical',
 }: Props) => {
   /** To prevent call loadMoreItems redundantly, in both `onItemsRendered` and on data change. */
   const pending = useRef<boolean>(false);
-  const prevHeight = useRef<number | null>(null);
+  const prevLength = useRef<number | null>(null);
   /** A dummy state to trigger rerender when promises by `loadMoreItems` resolves. */
   const [dummyState, setDummyState] = useState(0);
   const forceRerender = () => setDummyState(pre => pre + 1);
@@ -66,7 +67,7 @@ const InfiniteScroll = ({
   /**
    * Prevent calling `loadMoreItems` frequently when loading items at the start.
    * However, do this only if enough items are loaded that
-   * the `outerRef`'s scrollHeight is large enough to scroll the element.
+   * the `outerRef`'s scrollLength is large enough to scroll the element.
    */
   const shouldBlockLoadMoreItems = useRef<ReturnType<typeof setTimeout> | null>(null);
   const getOuterElement = useCallback(() =>
@@ -80,14 +81,15 @@ const InfiniteScroll = ({
     if (pending.current || !outerElement) {
       return;
     }
-    const loadedEnoughItems = outerElement.clientHeight + scrollOffset < outerElement.scrollHeight;
+    const {clientLength, scrollLength} = getElementData(outerElement, layout);
+    const loadedEnoughItems = clientLength + scrollOffset < scrollLength;
     if (shouldBlockLoadMoreItems.current !== null && loadedEnoughItems) {
       return;
     }
     pending.current = true;
-    // Record previous height to scroll before browser repaint.
+    // Record previous length to scroll before browser repaint.
     if (direction === 'start') {
-      prevHeight.current = outerElement.scrollHeight;
+      prevLength.current = scrollLength;
     }
     const ret = loadMoreItems(direction);
     if (isPromise(ret)) {
@@ -95,7 +97,7 @@ const InfiniteScroll = ({
       setShouldCheckDataChange(true);
     }
     pending.current = false;
-  }, [getOuterElement, loadMoreItems, scrollOffset]);
+  }, [getOuterElement, loadMoreItems, scrollOffset, layout]);
 
   const _onItemsRendered = useCallback<OnItemsRendered>((args) => {
     const {visibleStartIndex, visibleStopIndex} = args;
@@ -143,20 +145,21 @@ const InfiniteScroll = ({
       return;
     }
     const element = outerElement;
-    const isAtBottom = element.scrollTop + element.offsetHeight + scrollOffset > element.scrollHeight;
-    const isAtTop = element.scrollTop < scrollOffset;
-    if (isAtBottom && !isItemLoaded(data.length)) {
-      // Scrolled to bottom.
+    const {scrollStart, offsetLength, scrollLength} = getElementData(element, layout);
+    const isAtEnd = scrollStart + offsetLength + scrollOffset > scrollLength;
+    const isAtStart = scrollStart < scrollOffset;
+    if (isAtEnd && !isItemLoaded(data.length)) {
+      // Scrolled to end.
       _loadMoreItems('end');
-    } else if (isAtTop && !isItemLoaded(-1)) {
-      // Scrolled to top.
+    } else if (isAtStart && !isItemLoaded(-1)) {
+      // Scrolled to start.
       _loadMoreItems('start');
     }
-  }, [data, dummyState, isItemLoaded, itemCount, scrollOffset, _loadMoreItems, getOuterElement]);
+  }, [data, dummyState, isItemLoaded, itemCount, scrollOffset, layout, _loadMoreItems, getOuterElement]);
 
   // Scroll downward to prevent calling loadMoreItems infinitely.
   // Do not pass deps argument as the effect should run with ref value.
-  // Since it checks `prevHeight`, the function will execute only after loadMoreItems('start') is called.
+  // Since it checks `prevLength`, the function will execute only after loadMoreItems('start') is called.
   useLayoutEffect(() => {
     const set = () => {
       shouldBlockLoadMoreItems.current = setTimeout(() => {
@@ -170,7 +173,7 @@ const InfiniteScroll = ({
     };
     const outerElement = getOuterElement();
 
-    if (prevHeight.current === null || outerElement === null) {
+    if (prevLength.current === null || outerElement === null) {
       if (shouldBlockLoadMoreItems.current !== null) {
         // Set the flag only when the flag is truthy
         // to gurantee to load more items at 'start' for the first time.
@@ -179,10 +182,16 @@ const InfiniteScroll = ({
       return reset;
     }
 
-    outerElement.scrollTop = Math.max(
-      outerElement.scrollHeight - prevHeight.current, scrollOffset
-    );
-    prevHeight.current = null;
+    if (layout === 'vertical') {
+      outerElement.scrollTop = Math.max(
+        outerElement.scrollHeight - prevLength.current, scrollOffset
+      );
+    } else {
+      outerElement.scrollLeft = Math.max(
+        outerElement.scrollWidth - prevLength.current, scrollOffset
+      );
+    }
+    prevLength.current = null;
 
     set();
     return reset;
