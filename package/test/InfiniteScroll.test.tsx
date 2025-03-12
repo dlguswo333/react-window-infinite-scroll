@@ -1,24 +1,24 @@
-import {test, expect, ComponentFixtures} from '@playwright/experimental-ct-react17';
+import {test, expect, MountResult} from '@playwright/experimental-ct-react17';
 import {StaticData1, StaticData2, SimpleDynamicData, BiDirectDynamicData, SomeFailDynamicData, ThresholdZeroBiDirectDynamicData} from './Components';
 import React from 'react';
 
 test.use({viewport: {width: 1000, height: 1000}});
 
-const scrollComponentToBottom = (component: Awaited<ReturnType<ComponentFixtures['mount']>>) => {
+const scrollComponentToBottom = (component: MountResult) => {
   return component.evaluate(element => {
     element.scrollTop = 100000;
     return element.scrollTop;
   });
 };
 
-const scrollComponentToTop = (component: Awaited<ReturnType<ComponentFixtures['mount']>>) => {
+const scrollComponentToTop = (component: MountResult) => {
   return component.evaluate(element => {
     element.scrollTop = 0;
     return element.scrollTop;
   });
 };
 
-const getData = (component: Awaited<ReturnType<ComponentFixtures['mount']>>) => (
+const getData = (component: MountResult) => (
   component.evaluate(() => window.data)
 );
 
