@@ -38,7 +38,7 @@ type Props = {
   /** *Actual* data that needs to be virtually scrolled. */
   data: unknown[];
   /** Layout of the vertical list. Default is `'vertical'`. */
-  layout: 'vertical' | 'horizontal';
+  layout?: 'vertical' | 'horizontal';
 }
 
 /** This is arbitrary number thus subject to change. */
