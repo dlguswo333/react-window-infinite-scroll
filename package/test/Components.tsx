@@ -33,11 +33,11 @@ export const StaticData1 = ({layout}: {layout?: Layout}) => {
     layout={layout}
   >
     {({onItemsRendered}) => <FixedSizeList
-      height={layout === 'vertical' ? 300 : '100%'}
+      height={layout === 'vertical' ? 300 : 100}
       itemCount={itemCount}
-      width={layout === 'vertical' ? '100%' : 300}
+      width={layout === 'vertical' ? '100%' : 1000}
       onItemsRendered={onItemsRendered}
-      itemSize={30}
+      itemSize={layout === 'vertical' ? 30 : 100}
       outerRef={outerRef}
       className='Outer'
       layout={layout}
@@ -68,11 +68,11 @@ export const StaticData2 = ({layout}: {layout?: Layout}) => {
     layout={layout}
   >
     {({onItemsRendered}) => <FixedSizeList
-      height={layout === 'vertical' ? 300 : '100%'}
+      height={layout === 'vertical' ? 300 : 100}
       itemCount={itemCount}
-      width={layout === 'vertical' ? '100%' : 300}
+      width={layout === 'vertical' ? '100%' : 1000}
       onItemsRendered={onItemsRendered}
-      itemSize={30}
+      itemSize={layout === 'vertical' ? 30 : 100}
       outerRef={outerRef}
       className='Outer'
       layout={layout}
@@ -120,11 +120,11 @@ export const SimpleDynamicData = ({hasInitialData, howToLoad, longerData, layout
     layout={layout}
   >
     {({onItemsRendered}) => <FixedSizeList
-      height={layout === 'vertical' ? 300 : '100%'}
+      height={layout === 'vertical' ? 300 : 100}
       itemCount={itemCount}
-      width={layout === 'vertical' ? '100%' : 300}
+      width={layout === 'vertical' ? '100%' : 1000}
       onItemsRendered={onItemsRendered}
-      itemSize={30}
+      itemSize={layout === 'vertical' ? 30 : 100}
       outerRef={outerRef}
       className='Outer'
       layout={layout}
@@ -180,11 +180,11 @@ export const BiDirectDynamicData = ({hasInitialData, howToLoad, layout}: {hasIni
     layout={layout}
   >
     {({onItemsRendered}) => <FixedSizeList
-      height={layout === 'vertical' ? 300 : '100%'}
+      height={layout === 'vertical' ? 300 : 100}
       itemCount={itemCount}
-      width={layout === 'vertical' ? '100%' : 300}
+      width={layout === 'vertical' ? '100%' : 1000}
       onItemsRendered={onItemsRendered}
-      itemSize={30}
+      itemSize={layout === 'vertical' ? 30 : 100}
       outerRef={outerRef}
       className='Outer'
       layout={layout}
@@ -245,11 +245,11 @@ export const SomeFailDynamicData = ({hasInitialData, howToLoad, layout}: {hasIni
     layout={layout}
   >
     {({onItemsRendered}) => <FixedSizeList
-      height={layout === 'vertical' ? 300 : '100%'}
+      height={layout === 'vertical' ? 300 : 100}
       itemCount={itemCount}
-      width={layout === 'vertical' ? '100%' : 300}
+      width={layout === 'vertical' ? '100%' : 1000}
       onItemsRendered={onItemsRendered}
-      itemSize={30}
+      itemSize={layout === 'vertical' ? 30 : 100}
       outerRef={outerRef}
       className='Outer'
       layout={layout}
@@ -300,11 +300,11 @@ export const ThresholdZeroBiDirectDynamicData = ({layout}: {layout?: Layout}) =>
     layout={layout}
   >
     {({onItemsRendered}) => <FixedSizeList
-      height={layout === 'vertical' ? 300 : '100%'}
+      height={layout === 'vertical' ? 300 : 100}
       itemCount={itemCount}
-      width={layout === 'vertical' ? '100%' : 300}
+      width={layout === 'vertical' ? '100%' : 1000}
       onItemsRendered={onItemsRendered}
-      itemSize={30}
+      itemSize={layout === 'vertical' ? 30 : 100}
       outerRef={outerRef}
       className='Outer'
       layout={layout}
