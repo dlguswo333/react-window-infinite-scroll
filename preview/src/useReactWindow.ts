@@ -14,8 +14,8 @@ const useReactWindow = ({
   numItemsToLoadAtOnce,
   infiniteScrollDirection,
 }: Props) => {
-  const [data, setData] = useState<string[]>(() => ['data 0']);
-  const resetData = useCallback(() => setData(['data 0']), []);
+  const [data, setData] = useState<string[]>(() => ['<0>']);
+  const resetData = useCallback(() => setData(['<0>']), []);
   const isFetching = useRef<boolean>(false);
   const itemCount = useMemo(() => data.length + (data.length < MAX_LENGTH ? 1 : 0), [data.length]);
 
@@ -38,7 +38,7 @@ const useReactWindow = ({
         ? Number(/(-?\d+)/.exec(data[data.length - 1])![1]) + 1 
         : Number(/(-?\d+)/.exec(data[0])![1]) - numItemsToLoadAtOnce;
       for (let i = 0;i < numItemsToLoadAtOnce;++i) {
-        newItems.push(`data ${start + i}`);
+        newItems.push(`<${start + i}>`);
       }
       return direction === 'end' 
         ? [...data, ...newItems]
