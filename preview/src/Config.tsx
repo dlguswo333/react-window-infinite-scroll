@@ -3,6 +3,7 @@ export type Configs = {
   Threshold: number,
   ScrollOffset: number,
   InfiniteScrollDirection: 'start' | 'end' | 'both',
+  Layout: 'vertical' | 'horizontal';
 }
 type SetState<T> = React.Dispatch<React.SetStateAction<T>>
 
@@ -11,10 +12,12 @@ type Props = {
   threshold: Configs['Threshold'],
   scrollOffset: Configs['ScrollOffset'],
   infiniteScrollDirection: Configs['InfiniteScrollDirection'],
+  layout: Configs['Layout'],
   setNumItemsToLoadAtOnce: SetState<Configs['NumItemsToLoadAtOnce']>;
   setThreshold: SetState<Configs['Threshold']>,
   setScrollOffset: SetState<Configs['ScrollOffset']>,
   setInfiniteScrollDirection: SetState<Configs['InfiniteScrollDirection']>,
+  setLayout: SetState<Configs['Layout']>,
   resetData: () => void;
 }
 
@@ -23,13 +26,30 @@ const Config = ({
   threshold,
   scrollOffset,
   infiniteScrollDirection,
+  layout,
   setNumItemsToLoadAtOnce,
   setThreshold,
   setScrollOffset,
   setInfiniteScrollDirection,
+  setLayout,
   resetData,
 }: Props) => {
   return <div className='Preview-Config'>
+    <div>
+      <h3>Layout: <code>{layout}</code></h3>
+      <select
+        value={infiniteScrollDirection}
+        onChange={(e) => {
+          const value = e.target.value;
+          if (value === 'vertical' || value === 'horizontal') {
+            setLayout(value);
+          }
+        }}
+      >
+        <option value='vertical'>vertical</option>
+        <option value='horizontal'>horizontal</option>
+      </select>
+    </div>
     <div>
       <h3>Number of Items to Load At Once: <code>{numItemsToLoadAtOnce}</code></h3>
       <select

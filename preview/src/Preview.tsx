@@ -16,6 +16,7 @@ const Preview = () => {
   const [threshold, setThreshold] = useState<Configs['Threshold']>(defaultValues.threshold);
   const [scrollOffset, setScrollOffset] = useState<Configs['ScrollOffset']>(defaultValues.scrollOffset);
   const [infiniteScrollDirection, setInfiniteScrollDirection] = useState<Configs['InfiniteScrollDirection']>(defaultValues.infiniteScrollDirection);
+  const [layout, setLayout] = useState<Configs['Layout']>('vertical');
   const {data, loadMoreItems, isItemsLoaded, itemCount, resetData} = useReactWindow({numItemsToLoadAtOnce, infiniteScrollDirection});
   const outerRef = useRef<HTMLElement>(null);
 
@@ -29,10 +30,12 @@ const Preview = () => {
       threshold={threshold}
       scrollOffset={scrollOffset}
       infiniteScrollDirection={infiniteScrollDirection}
+      layout={layout}
       setNumItemsToLoadAtOnce={setNumItemsToLoadAtOnce}
       setThreshold={setThreshold}
       setScrollOffset={setScrollOffset}
       setInfiniteScrollDirection={setInfiniteScrollDirection}
+      setLayout={setLayout}
       resetData={resetData}
     />
     <InfiniteScroll
@@ -43,15 +46,17 @@ const Preview = () => {
       threshold={threshold}
       outerRef={outerRef}
       scrollOffset={scrollOffset}
+      layout={layout}
     >
       {({onItemsRendered}) => <FixedSizeList
-        height={300}
+        height={layout === 'vertical' ? 300 : 100}
         itemCount={itemCount}
-        width='100%'
+        width={layout === 'vertical' ? '100%' : 600}
         onItemsRendered={onItemsRendered}
-        itemSize={30}
+        itemSize={layout === 'vertical' ? 30 : 60}
         outerRef={outerRef}
         className='Outer'
+        layout={layout}
       >
         {Row}
       </FixedSizeList>}

@@ -1,4 +1,4 @@
-import {CSSProperties, useEffect, useRef, useState} from 'react';
+import {ComponentProps, CSSProperties, useEffect, useRef, useState} from 'react';
 import InfiniteScroll from '../src/InfiniteScroll';
 import {FixedSizeList} from 'react-window';
 import React from 'react';
@@ -10,8 +10,9 @@ declare global {
     data: unknown[];
   }
 }
+type Layout = ComponentProps<typeof InfiniteScroll>['layout'];
 
-export const StaticData1 = () => {
+export const StaticData1 = ({layout}: {layout?: Layout}) => {
   const data = ['<0>'];
   const outerRef = useRef<HTMLElement>(null);
   const loadMoreItems = () => new Promise(res => res(undefined));
@@ -29,22 +30,24 @@ export const StaticData1 = () => {
     threshold={1}
     outerRef={outerRef}
     scrollOffset={30}
+    layout={layout}
   >
     {({onItemsRendered}) => <FixedSizeList
-      height={300}
+      height={layout === 'vertical' ? 300 : 100}
       itemCount={itemCount}
-      width='100%'
+      width={layout === 'vertical' ? '100%' : 1000}
       onItemsRendered={onItemsRendered}
-      itemSize={30}
+      itemSize={layout === 'vertical' ? 30 : 100}
       outerRef={outerRef}
       className='Outer'
+      layout={layout}
     >
       {Row}
     </FixedSizeList>}
   </InfiniteScroll>;
 };
 
-export const StaticData2 = () => {
+export const StaticData2 = ({layout}: {layout?: Layout}) => {
   const data = ['<0>', '<1>', '<2>'];
   const outerRef = useRef<HTMLElement>(null);
   const loadMoreItems = () => new Promise(res => res(undefined));
@@ -62,15 +65,17 @@ export const StaticData2 = () => {
     threshold={1}
     outerRef={outerRef}
     scrollOffset={30}
+    layout={layout}
   >
     {({onItemsRendered}) => <FixedSizeList
-      height={300}
+      height={layout === 'vertical' ? 300 : 100}
       itemCount={itemCount}
-      width='100%'
+      width={layout === 'vertical' ? '100%' : 1000}
       onItemsRendered={onItemsRendered}
-      itemSize={30}
+      itemSize={layout === 'vertical' ? 30 : 100}
       outerRef={outerRef}
       className='Outer'
+      layout={layout}
     >
       {Row}
     </FixedSizeList>}
@@ -81,7 +86,7 @@ export const StaticData2 = () => {
 /**
  * It will show 10 items at once since the container has height of 300 and each item of 30.
  */
-export const SimpleDynamicData = ({hasInitialData, howToLoad, longerData}: {hasInitialData: boolean; howToLoad: 'sync' | 'instantAsync' | 'fastAsync' | 'slowAsync', longerData: boolean;}) => {
+export const SimpleDynamicData = ({hasInitialData, howToLoad, longerData, layout}: {hasInitialData: boolean; howToLoad: 'sync' | 'instantAsync' | 'fastAsync' | 'slowAsync', longerData: boolean; layout?: Layout}) => {
   const maxDataSize = longerData ? 100 : 3;
   const [data, setData] = useState<string[]>(hasInitialData ? ['<0>'] : []);
   const outerRef = useRef<HTMLElement>(null);
@@ -112,15 +117,17 @@ export const SimpleDynamicData = ({hasInitialData, howToLoad, longerData}: {hasI
     threshold={1}
     outerRef={outerRef}
     scrollOffset={30}
+    layout={layout}
   >
     {({onItemsRendered}) => <FixedSizeList
-      height={300}
+      height={layout === 'vertical' ? 300 : 100}
       itemCount={itemCount}
-      width='100%'
+      width={layout === 'vertical' ? '100%' : 1000}
       onItemsRendered={onItemsRendered}
-      itemSize={30}
+      itemSize={layout === 'vertical' ? 30 : 100}
       outerRef={outerRef}
       className='Outer'
+      layout={layout}
     >
       {Row}
     </FixedSizeList>}
@@ -130,7 +137,7 @@ export const SimpleDynamicData = ({hasInitialData, howToLoad, longerData}: {hasI
 /**
  * It will show 10 items at once since the container has height of 300 and each item of 30.
  */
-export const BiDirectDynamicData = ({hasInitialData, howToLoad}: {hasInitialData: boolean; howToLoad: 'sync' | 'instantAsync' | 'fastAsync' | 'slowAsync'}) => {
+export const BiDirectDynamicData = ({hasInitialData, howToLoad, layout}: {hasInitialData: boolean; howToLoad: 'sync' | 'instantAsync' | 'fastAsync' | 'slowAsync', layout?: Layout}) => {
   const maxDataSize = 100;
   const [data, setData] = useState<string[]>(hasInitialData ? ['<0>'] : []);
   const outerRef = useRef<HTMLElement>(null);
@@ -170,15 +177,17 @@ export const BiDirectDynamicData = ({hasInitialData, howToLoad}: {hasInitialData
     threshold={1}
     outerRef={outerRef}
     scrollOffset={40}
+    layout={layout}
   >
     {({onItemsRendered}) => <FixedSizeList
-      height={300}
+      height={layout === 'vertical' ? 300 : 100}
       itemCount={itemCount}
-      width='100%'
+      width={layout === 'vertical' ? '100%' : 1000}
       onItemsRendered={onItemsRendered}
-      itemSize={30}
+      itemSize={layout === 'vertical' ? 30 : 100}
       outerRef={outerRef}
       className='Outer'
+      layout={layout}
     >
       {Row}
     </FixedSizeList>}
@@ -190,7 +199,7 @@ export const BiDirectDynamicData = ({hasInitialData, howToLoad}: {hasInitialData
  * This is to test infinite rerender bug.
  * https://github.com/dlguswo333/react-window-infinite-scroll/issues/21
  */
-export const SomeFailDynamicData = ({hasInitialData, howToLoad}: {hasInitialData: boolean; howToLoad: 'sync' | 'async';}) => {
+export const SomeFailDynamicData = ({hasInitialData, howToLoad, layout}: {hasInitialData: boolean; howToLoad: 'sync' | 'async'; layout?: Layout}) => {
   const maxDataSize = 100;
   const [data, setData] = useState<string[]>(hasInitialData ? ['<0>'] : []);
   const outerRef = useRef<HTMLElement>(null);
@@ -233,15 +242,17 @@ export const SomeFailDynamicData = ({hasInitialData, howToLoad}: {hasInitialData
     threshold={1}
     outerRef={outerRef}
     scrollOffset={30}
+    layout={layout}
   >
     {({onItemsRendered}) => <FixedSizeList
-      height={300}
+      height={layout === 'vertical' ? 300 : 100}
       itemCount={itemCount}
-      width='100%'
+      width={layout === 'vertical' ? '100%' : 1000}
       onItemsRendered={onItemsRendered}
-      itemSize={30}
+      itemSize={layout === 'vertical' ? 30 : 100}
       outerRef={outerRef}
       className='Outer'
+      layout={layout}
     >
       {Row}
     </FixedSizeList>}
@@ -251,7 +262,7 @@ export const SomeFailDynamicData = ({hasInitialData, howToLoad}: {hasInitialData
 /**
  * Should load more data even if `threshold` is 0, thanks to positive `scrollOffset`.
  */
-export const ThresholdZeroBiDirectDynamicData = () => {
+export const ThresholdZeroBiDirectDynamicData = ({layout}: {layout?: Layout}) => {
   const maxDataSize = 100;
   const [data, setData] = useState<string[]>(['<0>']);
   const outerRef = useRef<HTMLElement>(null);
@@ -286,15 +297,17 @@ export const ThresholdZeroBiDirectDynamicData = () => {
     threshold={0}
     outerRef={outerRef}
     scrollOffset={40}
+    layout={layout}
   >
     {({onItemsRendered}) => <FixedSizeList
-      height={300}
+      height={layout === 'vertical' ? 300 : 100}
       itemCount={itemCount}
-      width='100%'
+      width={layout === 'vertical' ? '100%' : 1000}
       onItemsRendered={onItemsRendered}
-      itemSize={30}
+      itemSize={layout === 'vertical' ? 30 : 100}
       outerRef={outerRef}
       className='Outer'
+      layout={layout}
     >
       {Row}
     </FixedSizeList>}
