@@ -166,6 +166,10 @@ const loadMoreItems = async () => {
 ```
 
 # Changelog
+## v0.0.9
+- Update dependencies.
+- Support horizontal layout.
+
 ## v0.0.8
 - Update dependencies
 - Fix infinite loading not work on 'start' direction when `threshold` is `0`.
