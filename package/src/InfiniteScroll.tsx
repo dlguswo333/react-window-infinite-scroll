@@ -37,7 +37,7 @@ type Props = {
   outerRef: React.RefObject<HTMLElement> | HTMLElement;
   /** *Actual* data that needs to be virtually scrolled. */
   data: unknown[];
-  /** Layout of the vertical list. Default is `'vertical'`. */
+  /** Layout of the virtual list. Default is `'vertical'`. */
   layout?: 'vertical' | 'horizontal';
 }
 
