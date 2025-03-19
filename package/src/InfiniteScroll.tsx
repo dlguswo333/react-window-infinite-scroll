@@ -184,11 +184,11 @@ const InfiniteScroll = ({
 
     if (layout === 'vertical') {
       outerElement.scrollTop = Math.max(
-        outerElement.scrollHeight - prevLength.current, scrollOffset
+        outerElement.scrollTop + outerElement.scrollHeight - prevLength.current, scrollOffset
       );
     } else {
       outerElement.scrollLeft = Math.max(
-        outerElement.scrollWidth - prevLength.current, scrollOffset
+        outerElement.scrollLeft + outerElement.scrollWidth - prevLength.current, scrollOffset
       );
     }
     prevLength.current = null;
