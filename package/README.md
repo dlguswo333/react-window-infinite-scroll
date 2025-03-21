@@ -166,10 +166,6 @@ const loadMoreItems = async () => {
 ```
 
 # Changelog
-## v0.1.0
-- Fix jumping scroll position when loading more items at the start.
-- Fix props documentation.
-
 ## v0.0.9
 - Update dependencies.
 - Support horizontal layout.
