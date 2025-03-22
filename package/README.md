@@ -205,8 +205,12 @@ const loadMoreItems = async () => {
 # Development
 ## Deploy
 ```shell
+npm version -w package x.x.x
 npm run deploy
 ```
+
+Be aware that you shouldn't run `npm version` command on root workspace,
+the version that should be concerned is from package workspace.
 
 Do not run `npm publish` in root directory or it might publish monorepo project.
 We have `private:true` in root package.json to prevent the situation.
