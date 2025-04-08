@@ -1,5 +1,5 @@
 # react-window-infinite-scroll
-react-window-infinite-scroll is a infinite scroll library
+react-window-infinite-scroll is an infinite scroll library
 specifically designed for [react-window][react-window].
 
 github link: <https://github.com/dlguswo333/react-window-infinite-scroll>
@@ -129,7 +129,7 @@ even though you have tiny (too tiny!) scrollable height.
 Data change event will help load more items in that case.
 
 ## `loadMoreItems` is getting called too many/few times.
-There maybe several bugs and issues with the package.
+This is probably because several bugs and issues with the package.
 Some possible issues with the component are that it may call `loadMoreItems` too many times,
 or that it may not call `loadMoreItems`.
 
