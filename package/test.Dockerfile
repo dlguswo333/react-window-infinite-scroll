@@ -5,7 +5,7 @@ FROM mcr.microsoft.com/playwright:v1.51.0-noble
 WORKDIR /app
 
 # Copy package.json files for caching and that is not expected to change frequently.
-COPY ./package.json ./package-lock.json .
+COPY ./package.json ./package-lock.json ./
 
 RUN npm ci
 
