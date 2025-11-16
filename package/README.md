@@ -2,7 +2,7 @@
 react-window-infinite-scroll is an infinite scroll library
 specifically designed for [react-window][react-window].
 
-github link: <https://github.com/dlguswo333/react-window-infinite-scroll>
+github link: <https://github.com/dlguswo333/react-window-infinite-scroll> \
 npm link: <https://www.npmjs.com/package/react-window-infinite-scroll>
 
 # Why react-window-infinite-scroll?
@@ -166,6 +166,9 @@ const loadMoreItems = async () => {
 ```
 
 # Changelog
+## v0.1.1
+- Lock react-window version to v1. The package is not compatible with the v2.
+
 ## v0.1.0
 - Fix jumping scroll position when loading more items at the start.
 - Fix props documentation.
